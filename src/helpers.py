@@ -31,7 +31,7 @@ def create_data_file(path: str) -> None:
     pass
 
 
-def check_itmes_updates():
+def check_items_updates():
     """
     Check list of existing items
     """
