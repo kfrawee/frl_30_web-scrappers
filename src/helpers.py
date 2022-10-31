@@ -7,11 +7,11 @@ import re
 from typing import List, Set
 
 
-
 from telegram_bot_utils import TelegramBot
 
 
 telegram_bot = TelegramBot()
+
 
 def load_data(path: str) -> List:
     """
@@ -28,6 +28,20 @@ def create_data_file(path: str) -> None:
 
     """
 
+    pass
+
+
+def check_itmes_updates():
+    """
+    Check list of existing items
+    """
+    pass
+
+
+def check_item_price(item_name: str) -> None:
+    """
+    Check and update item price if updated
+    """
     pass
 
 
@@ -53,7 +67,4 @@ def extract_price(text_price: str = None) -> float:
 if __name__ == "__main__":
     os.system("cls || clear")
 
-    texts = ["$10,22", "$2.111", "USD 102.13", "USD 13,33", "NONE", "", None]
-
-    for price in texts:
-        print(price, "\t\t", extract_price(price))
+    
