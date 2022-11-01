@@ -10,3 +10,5 @@ Constant variables.
 
 TELEGRAM_BOT_API_KEY = "5749871533:AAGK0vMxRn8K9fdFmrVcBsCKLoP45WdYKcw"
 CHAT_ID = -776499304
+DATA_DIR = "data"
+DATA_FILE_NAME = "data.csv"
