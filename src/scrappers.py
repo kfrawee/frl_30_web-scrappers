@@ -19,18 +19,70 @@ Each website has a different scrapping function.
 # https://www.muscleandstrength.com/store/category/clearance.html
 # https://www.scheels.com/c/all/sale
 """
+from http import HTTPStatus
+
+from bs4 import BeautifulSoup
+
+import requests
+from helpers import get_domain_name, extract_price
+from telegram_bot_utils import TelegramBot
+
+telegram_bot = TelegramBot()
 
 
-def fun():
-    print("x")
+headers = {"Content-Type": "application/json"}
 
 
-class FunctionsMapping:
+def scrape_plaidonline():
+    base_url = "https://plaidonline.com/products?closeout=True"
+    items = []
+
+    try:
+        res = requests.request("GET", url=base_url, headers=headers)
+        assert res.status_code == HTTPStatus.OK
+
+        soup = BeautifulSoup(res.content, "lxml")
+
+        # get number of pages
+        raw_pages_data = soup.find(class_="PagerNumberArea").find_all("span")[3]
+        no_of_pages = []
+        selected_page = raw_pages_data.find(class_="SelectedPage").string
+        no_of_pages.append(selected_page)
+        unselected_pages = raw_pages_data.find_all(class_="UnselectedPage")
+        for unselected_page in unselected_pages:
+            no_of_pages.append(unselected_page.string)
+        
+        no_of_pages = sorted(map(int, no_of_pages))
+
+        # scrape pages
+        for page_no in no_of_pages:
+            url = base_url + f"&page={page_no}"
+            pass
+        
+    except (
+        AssertionError,
+        requests.exceptions.HTTPError,
+        requests.exceptions.ConnectionError,
+    ) as e:
+        error_message = (
+            f"Error while trying to contact to {get_domain_name(base_url)}: '{e}'"
+        )
+        telegram_bot.send_alert(error_message)
+
+    return items
+
+
+class ScrappersFunctionsMapping:
     """ Mapping functions for each website """
 
     def __init__(self):
-        self.websites = {"key": fun()}
+        self.websites = {"plaidonline": scrape_plaidonline()}
 
     def start(self):
         for website in self.websites:
             self.websites.get(website)
+
+
+if __name__ == "__main__":
+    scrappers = ScrappersFunctionsMapping()
+    scrappers.start()

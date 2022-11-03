@@ -93,3 +93,15 @@ def extract_price(text_price: str = None) -> float:
     extracted_price = re.findall(pattern, text_price.replace(",", "."))
 
     return float(extracted_price[0]) if extracted_price else 0
+
+
+def get_domain_name(url: str = None) -> str:
+    """
+    Using regex; extract domain name.
+
+
+        extracted_price(`float`): The extracted price.
+    """
+    pattern = r"^(?:http:\/\/|www\.|https:\/\/)([^\/]+)"
+
+    return re.findall(pattern, url)[0]

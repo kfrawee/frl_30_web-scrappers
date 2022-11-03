@@ -101,21 +101,12 @@ class TelegramBot:
 
     def send_alert(self, message: str) -> None:
         """
-        Send alert message.
+        Send an alert message.
 
         Args:
             message (`str`): message to send.
         Returns:
-            `None`"""
+            `None`
+        """
         emoji = "ALERT"
         self._send_message(message=message, emoji=emoji)
-
-
-if __name__ == "__main__":
-    bot = TelegramBot()
-    bot.send_price_update(
-        item_name="example",
-        item_url="www.example.com",
-        item_old_price=13,
-        item_new_price=11,
-    )
