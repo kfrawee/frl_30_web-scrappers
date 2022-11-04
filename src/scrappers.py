@@ -51,14 +51,14 @@ def scrape_plaidonline():
         unselected_pages = raw_pages_data.find_all(class_="UnselectedPage")
         for unselected_page in unselected_pages:
             no_of_pages.append(unselected_page.string)
-        
+
         no_of_pages = sorted(map(int, no_of_pages))
 
         # scrape pages
         for page_no in no_of_pages:
             url = base_url + f"&page={page_no}"
             pass
-        
+
     except (
         AssertionError,
         requests.exceptions.HTTPError,
