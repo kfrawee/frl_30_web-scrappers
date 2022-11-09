@@ -23,6 +23,7 @@ telegram_bot = TelegramBot()
 
 if __name__ == "__main__":
     import os
+
     os.system("cls || clear")
 
     # scrappers = ScrappersFunctionsMapping() # TODO
@@ -61,12 +62,7 @@ if __name__ == "__main__":
             new_items_count += 1
             item_data.update(added_on=str(now))
             updated_items_df = pd.concat(
-                [
-                    updated_items_df,
-                    pd.DataFrame(
-                        [item_data], columns=DATA_COLUMNS
-                    ),
-                ]
+                [updated_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS),]
             )
 
     # report to telegram
