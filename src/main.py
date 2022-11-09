@@ -31,11 +31,11 @@ if __name__ == "__main__":
     telegram_bot.send_alert(f"Loaded {len(existing_items)} existing items.")
     telegram_bot.send_alert(f"Start scraping...")
 
-    updated_items_df = existing_items.copy()
+    updated_items_df = existing_items_df.copy()
     now = updated_datetime()
     count = 0
     # 1st website:
-    scaped_items, domain_name = scrape_plaidonline()
+    scaped_items = scrape_plaidonline()
 
     for item_data in scaped_items:
         if (item_title := item_data.get("item_title")) in existing_items:
@@ -50,13 +50,13 @@ if __name__ == "__main__":
 
         else:
             count += 1
-            pd.concat(
-                [existing_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS)]
+            updated_items_df = pd.concat(
+                [updated_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS)]
             )
 
     telegram_bot.send_new_items_added(count)
     updated_items_df["updated_on"] = updated_items_df["updated_on"].apply(
-        lambda x: updated_datetime()
+        lambda _: updated_datetime()
     )
     save_data(updated_items_df)
     telegram_bot.send_alert("Done.")

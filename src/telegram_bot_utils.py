@@ -63,7 +63,7 @@ class TelegramBot:
             `None`
         """
         emoji = "ADD"
-        message = f"<b>Hey! A new {items_count} items were added!</b>\n"
+        message = f"<b>Hey! New {items_count} items were added!</b>\n"
 
         self._send_message(message=message, emoji=emoji)
 
@@ -92,7 +92,7 @@ class TelegramBot:
         else:
             emoji = "UP"
         message = (
-            "<b>Hey! An item's price has been changed!</b> \n"
+            "<b>Hey! An item's price has been updated!</b> \n"
             f"<a href='{item_url}'>{item_title}</a> \n"
             f"<b>Old Price:</b> ${item_old_price} - <b>New Price:</b> ${item_new_price}"
         )

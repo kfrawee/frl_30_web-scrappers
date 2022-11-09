@@ -3,6 +3,7 @@ Helper functions.
 """
 
 import os
+from pathlib import Path
 import re
 from datetime import datetime, timezone
 from typing import List, Set
@@ -30,12 +31,14 @@ def load_data(
     Returns:
         data (pd.DataFrame): Dataframe with data
     """
-    full_path = os.path.join(os.path.abspath(__file__), data_dir, data_file_name)
-    if not os.path.exists(full_path):
+    full_dir_path = os.path.join(Path(__file__).parent.resolve(), data_dir)
+    full_file_path = os.path.join(full_dir_path, data_file_name)
+
+    if not os.path.exists(full_dir_path):
         return pd.DataFrame(columns=DATA_COLUMNS)  # first run
     try:
-        return pd.read_csv(full_path)
-    except pd.errors.EmptyDataError:
+        return pd.read_csv(full_file_path)
+    except (pd.errors.EmptyDataError, FileNotFoundError):
         return pd.DataFrame(columns=DATA_COLUMNS)
 
 
@@ -52,9 +55,14 @@ def save_data(
     Returns:
         None
     """
-    full_path = os.path.join(os.path.abspath(__file__), data_dir, data_file_name)
 
-    data.to_csv(full_path, index=False)
+    full_dir_path = os.path.join(Path(__file__).parent.resolve(), data_dir)
+    full_file_path = os.path.join(full_dir_path, data_file_name)
+
+    if not os.path.exists(full_dir_path):
+        os.makedirs(full_dir_path)
+
+    data.to_csv(full_file_path, index=False)
 
 
 def list_existing_items(dataframe: pd.DataFrame) -> List:
