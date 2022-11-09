@@ -72,17 +72,17 @@ def scrape_plaidonline():
     return items
 
 
-class ScrappersFunctionsMapping:
-    """ Mapping functions for each website """
+# class ScrappersFunctionsMapping:
+#     """ Mapping functions for each website """
 
-    def __init__(self):
-        self.websites = {"plaidonline": scrape_plaidonline()}
+#     def __init__(self):
+#         self.websites = {"plaidonline": scrape_plaidonline()}
 
-    def start(self):
-        for website in self.websites:
-            self.websites.get(website)
+#     def start(self):
+#         for website in self.websites:
+#             self.websites.get(website)
 
 
-if __name__ == "__main__":
-    scrappers = ScrappersFunctionsMapping()
-    scrappers.start()
+# if __name__ == "__main__":
+#     # scrappers = ScrappersFunctionsMapping()
+#     # scrappers.start()
