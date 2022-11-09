@@ -22,8 +22,12 @@ from telegram_bot_utils import TelegramBot
 telegram_bot = TelegramBot()
 
 if __name__ == "__main__":
+    import os
+    os.system("cls || clear")
+
     # scrappers = ScrappersFunctionsMapping() # TODO
     # scrappers.start() # TODO
+
     # load existing items data
     existing_items_df = load_data()
     existing_items = list_existing_items(existing_items_df)
@@ -55,15 +59,17 @@ if __name__ == "__main__":
 
         else:
             new_items_count += 1
+            item_data.update(added_on=str(now))
             updated_items_df = pd.concat(
                 [
                     updated_items_df,
                     pd.DataFrame(
-                        [item_data.update(added_on=now)], columns=DATA_COLUMNS
+                        [item_data], columns=DATA_COLUMNS
                     ),
                 ]
             )
 
+    # report to telegram
     telegram_bot.send_new_items_added(new_items_count)
     telegram_bot.send_new_items_updated(updated_items_count)
 

@@ -14,7 +14,7 @@ class TelegramBot:
         self.emojis = {
             "ALERT": "⚠️⚠️",
             "ADD": "🆕✨",
-            "UPDATE": "📰🔃",
+            "UPDATE": "🔃✨",
             "UP": "⬆️📈",
             "DOWN": "⬇️📉",
         }
@@ -59,7 +59,7 @@ class TelegramBot:
 
         self._send_message(message=message, emoji=emoji)
 
-    def send_new_items_updated(self, items_count: int) -> None:
+    def send_new_items_added(self, items_count: int) -> None:
         """
         Send message with new items added.
 
@@ -73,7 +73,7 @@ class TelegramBot:
 
         self._send_message(message=message, emoji=emoji)
 
-    def send_new_items_added(self, items_count: int) -> None:
+    def send_new_items_updated(self, items_count: int) -> None:
         """
         Send message with new items updated.
 

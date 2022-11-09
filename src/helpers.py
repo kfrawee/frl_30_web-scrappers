@@ -97,7 +97,7 @@ def update_item_price(
     """
     dataframe.loc[
         dataframe["item_title"] == item_title, ["item_price", "updated_at"]
-    ] = [new_item_price, updated_datetime()]
+    ] = [new_item_price, str(updated_datetime())]
     return dataframe
 
 
