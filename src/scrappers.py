@@ -1,7 +1,7 @@
 """
 Scrappers functions.
-Each website has a different scrapping function. 
-# List urls: 
+Each website has a different scrapping function.
+# List urls:
 
 # https://plaidonline.com/products?closeout=True
 # https://www.enasco.com/c/Clearance
@@ -44,19 +44,23 @@ def scrape_plaidonline():
         soup = BeautifulSoup(res.content, "lxml")
 
         # get number of pages
-        raw_pages_data = soup.find(class_="PagerNumberArea").find_all("span")[3]
-        no_of_pages = []
-        selected_page = raw_pages_data.find(class_="SelectedPage").string
-        no_of_pages.append(selected_page)
-        unselected_pages = raw_pages_data.find_all(class_="UnselectedPage")
-        for unselected_page in unselected_pages:
-            no_of_pages.append(unselected_page.string)
+        # it is 5 pages, but I don't want to hard code it incase it increases
+        try:
+            raw_pages_data = soup.find(class_="PagerNumberArea").find_all("span")[3]
+            no_of_pages = []
+            selected_page = raw_pages_data.find(class_="SelectedPage").string
+            no_of_pages.append(selected_page)
+            unselected_pages = raw_pages_data.find_all(class_="UnselectedPage")
+            for unselected_page in unselected_pages:
+                no_of_pages.append(unselected_page.string)
 
-        no_of_pages = sorted(map(int, no_of_pages))
-
+            no_of_pages = sorted(map(int, no_of_pages))
+        except Exception as e:  # I don't know
+            print("Error getting pages", e.args)
+            no_of_pages = 5  # -_-
         # scrape pages
         for page_no in no_of_pages:
-            url = base_url + f"&page={page_no}"
+            page_url = base_url + f"&page={page_no}"
             pass
 
     except (
