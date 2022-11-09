@@ -20,11 +20,12 @@ Each website has a different scrapping function.
 # https://www.scheels.com/c/all/sale
 """
 from http import HTTPStatus
-
+from time import sleep
 from bs4 import BeautifulSoup
 
 import requests
-from helpers import get_domain_name, extract_price
+from helpers import get_domain_name, extract_price, DATA_COLUMNS
+from constants import PAGES_SLEEP_INTERVAL
 from telegram_bot_utils import TelegramBot
 
 telegram_bot = TelegramBot()
@@ -34,6 +35,7 @@ headers = {"Content-Type": "application/json"}
 
 
 def scrape_plaidonline():
+    domain_name = "https://plaidonline.com/"
     base_url = "https://plaidonline.com/products?closeout=True"
     items = []
 
@@ -61,12 +63,46 @@ def scrape_plaidonline():
         # scrape pages
         for page_no in no_of_pages:
             page_url = base_url + f"&page={page_no}"
-            pass
+            res = requests.request("GET", url=page_url, headers=headers)
+            assert res.status_code == HTTPStatus.OK
 
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # find all class="price" but skip the second one (each item has 2 "price" classes)
+            prices = [
+                _ if i % 2 == 0 else None
+                for i, _ in enumerate(soup.find_all(class_="price"))
+            ]
+            # remove None
+            prices_clean = [price for price in prices if price]
+            # len(prices_clean) # 40 for full items in a page
+            for raw_item_price in prices_clean:
+                # item_price
+                item_price = extract_price(raw_item_price.text)
+                # item_title
+                item_title = raw_item_price.parent.h3.text
+                # item_url
+                item_url = raw_item_price.parent.parent.parent.parent.find("a").get(
+                    "href"
+                )
+
+                # append item dictionary
+                items.append(
+                    {
+                        "item_title": item_title,
+                        "item_price": item_price,
+                        "item_url": domain_name.strip("/") + item_url
+                        if item_url
+                        else "/",
+                    }
+                )
+
+            sleep(PAGES_SLEEP_INTERVAL)
     except (
         AssertionError,
         requests.exceptions.HTTPError,
         requests.exceptions.ConnectionError,
+        Exception,  # un-captured exception
     ) as e:
         error_message = (
             f"Error while trying to contact to {get_domain_name(base_url)}: '{e}'"
@@ -85,8 +121,3 @@ def scrape_plaidonline():
 #     def start(self):
 #         for website in self.websites:
 #             self.websites.get(website)
-
-
-# if __name__ == "__main__":
-#     # scrappers = ScrappersFunctionsMapping()
-#     # scrappers.start()

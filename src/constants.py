@@ -8,7 +8,8 @@ Constant variables.
         REF: https://www.alphr.com/find-chat-id-telegram/
 """
 
-TELEGRAM_BOT_API_KEY = "5749871533:AAGK0vMxRn8K9fdFmrVcBsCKLoP45WdYKcw"
-CHAT_ID = -776499304
+TELEGRAM_BOT_API_KEY = "5280766845:AAEnPZxjpBne5Dxl6x-U121VGvMDuOR4H4g"
+CHAT_ID = -845543341
 DATA_DIR = "data"
 DATA_FILE_NAME = "data.csv"
+PAGES_SLEEP_INTERVAL = 1

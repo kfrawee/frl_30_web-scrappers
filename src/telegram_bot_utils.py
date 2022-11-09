@@ -33,13 +33,13 @@ class TelegramBot:
             print(f"Error sending message, {e.message}")
 
     def send_new_item_added(
-        self, item_name: str, item_url: str, item_price: float
+        self, item_title: str, item_url: str, item_price: float
     ) -> None:
         """
         Send message with new item added.
 
         Args:
-            item_name (`str`):  name of the item.
+            item_title (`str`):  name of the item.
             item_url (`str`): url of the item.
             item_price (`float`): price of the item.
         Returns:
@@ -48,7 +48,7 @@ class TelegramBot:
         emoji = "ADD"
         message = (
             f"<b>Hey! A new item was added!</b>\n"
-            f"<a href='{item_url}'>{item_name}</a> - <b>Price:</b> ${item_price}\n"
+            f"<a href='{item_url}'>{item_title}</a> - <b>Price:</b> ${item_price}\n"
         )
 
         self._send_message(message=message, emoji=emoji)
@@ -69,7 +69,7 @@ class TelegramBot:
 
     def send_price_update(
         self,
-        item_name: str,
+        item_title: str,
         item_url: str,
         item_old_price: float,
         item_new_price: float,
@@ -78,7 +78,7 @@ class TelegramBot:
         Send message if item's price is updated.
 
         Args:
-            item_name (`str`): name of the item.
+            item_title (`str`): name of the item.
             item_url (`str`): url of the item.
             item_old_price (`float`): old price of the item.
             item_new_price (`float`): new price of the item.
@@ -93,7 +93,7 @@ class TelegramBot:
             emoji = "UP"
         message = (
             "<b>Hey! An item's price has been changed!</b> \n"
-            f"<a href='{item_url}'>{item_name}</a> \n"
+            f"<a href='{item_url}'>{item_title}</a> \n"
             f"<b>Old Price:</b> ${item_old_price} - <b>New Price:</b> ${item_new_price}"
         )
 
@@ -110,3 +110,8 @@ class TelegramBot:
         """
         emoji = "ALERT"
         self._send_message(message=message, emoji=emoji)
+
+
+if __name__ == "__main__":
+    tel = TelegramBot()
+    tel.send_alert("TEST")

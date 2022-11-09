@@ -14,7 +14,7 @@ from constants import DATA_DIR, DATA_FILE_NAME
 
 telegram_bot = TelegramBot()
 
-DATA_COLUMNS = ["item_name", "item_price", "item_url", "added_on", "updated_on"]
+DATA_COLUMNS = ["item_title", "item_price", "item_url", "updated_on"]
 
 
 def load_data(
@@ -39,19 +39,37 @@ def load_data(
         return pd.DataFrame(columns=DATA_COLUMNS)
 
 
+def save_data(
+    data: pd.DataFrame, data_dir: str = DATA_DIR, data_file_name: str = DATA_FILE_NAME
+) -> None:
+    """
+    Save data to a csv file.
+
+    Args:
+        data (dataframe): Data to save.
+        data_dir (str): Data directory (default /data)
+        data_file_name (str): Name of the CSV file (default data.csv) 
+    Returns:
+        None
+    """
+    full_path = os.path.join(os.path.abspath(__file__), data_dir, data_file_name)
+
+    data.to_csv(full_path, index=False)
+
+
 def list_existing_items(dataframe: pd.DataFrame) -> List:
     """
-    Check list of existing items
+    Return list of existing items
     """
-    return dataframe["item_name"].to_list()
+    return dataframe["item_title"].to_list()
 
 
-def get_item_price(dataframe: pd.DataFrame, item_name: str) -> float:
+def get_item_price(dataframe: pd.DataFrame, item_title: str) -> float:
     """
     Check existing item price.
     """
     try:
-        return dataframe[dataframe["item_name"] == item_name]["item_price"].values[0]
+        return dataframe[dataframe["item_title"] == item_title]["item_price"].values[0]
     except IndexError:
         return 0.0
 
@@ -64,12 +82,12 @@ def updated_datetime(now=datetime.now(tz=timezone.utc)) -> datetime:
 
 
 def update_item_price(
-    dataframe: pd.DataFrame, item_name: str, new_item_price: float
+    dataframe: pd.DataFrame, item_title: str, new_item_price: float
 ) -> pd.DataFrame:
     """
     Update existing item price.
     """
-    dataframe[dataframe["item_name"] == item_name, ["item_price", "updated_on"]] = [
+    dataframe[dataframe["item_title"] == item_title, ["item_price", "updated_on"]] = [
         new_item_price,
         updated_datetime(),
     ]
