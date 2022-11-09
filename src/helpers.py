@@ -15,7 +15,7 @@ from constants import DATA_DIR, DATA_FILE_NAME
 
 telegram_bot = TelegramBot()
 
-DATA_COLUMNS = ["item_title", "item_price", "item_url", "updated_on"]
+DATA_COLUMNS = ["item_title", "item_price", "item_url", "added_on", "updated_on"]
 
 
 def load_data(
@@ -95,10 +95,9 @@ def update_item_price(
     """
     Update existing item price.
     """
-    dataframe[dataframe["item_title"] == item_title, ["item_price", "updated_on"]] = [
-        new_item_price,
-        updated_datetime(),
-    ]
+    dataframe.loc[
+        dataframe["item_title"] == item_title, ["item_price", "updated_at"]
+    ] = [new_item_price, updated_datetime()]
     return dataframe
 
 

@@ -132,3 +132,4 @@ dmypy.json
 # other
 .DS_Store
 local_sandbox/**
+*.zip

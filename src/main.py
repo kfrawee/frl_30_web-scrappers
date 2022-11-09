@@ -33,7 +33,10 @@ if __name__ == "__main__":
 
     updated_items_df = existing_items_df.copy()
     now = updated_datetime()
-    count = 0
+
+    new_items_count = 0
+    updated_items_count = 0
+
     # 1st website:
     scaped_items = scrape_plaidonline()
 
@@ -41,22 +44,28 @@ if __name__ == "__main__":
         if (item_title := item_data.get("item_title")) in existing_items:
             item_url = item_data.get("item_url")
             item_new_price = item_data.get("item_price")
-            item_old_price = get_item_price(item_title)
+            item_old_price = get_item_price(updated_items_df, item_title)
 
-            update_item_price(updated_items_df, item_title, item_new_price)
-            telegram_bot.send_price_update(
-                item_title, item_url, item_old_price, item_new_price
-            )
+            if item_new_price != item_old_price:
+                updated_items_count += 1
+                update_item_price(updated_items_df, item_title, item_new_price)
+                telegram_bot.send_price_update(
+                    item_title, item_url, item_old_price, item_new_price
+                )
 
         else:
-            count += 1
+            new_items_count += 1
             updated_items_df = pd.concat(
-                [updated_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS)]
+                [
+                    updated_items_df,
+                    pd.DataFrame(
+                        [item_data.update(added_on=now)], columns=DATA_COLUMNS
+                    ),
+                ]
             )
 
-    telegram_bot.send_new_items_added(count)
-    updated_items_df["updated_on"] = updated_items_df["updated_on"].apply(
-        lambda _: updated_datetime()
-    )
+    telegram_bot.send_new_items_added(new_items_count)
+    telegram_bot.send_new_items_updated(updated_items_count)
+
     save_data(updated_items_df)
     telegram_bot.send_alert("Done.")
