@@ -113,7 +113,7 @@ def scrape_plaidonline():
 
 
 def scrape_enasco():
-    pass
+    domain_url = f"https://www.enasco.com/c/Clearance?page={52}&gridstyle=gridStyle&text=&q=%3Arelevance"
 
 
 # class ScrappersFunctionsMapping:
