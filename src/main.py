@@ -15,6 +15,7 @@ from helpers import (
 
 from scrappers import (
     scrape_plaidonline,
+    scrape_enasco,
     # ScrappersFunctionsMapping
 )
 from telegram_bot_utils import TelegramBot
@@ -42,10 +43,10 @@ if __name__ == "__main__":
     new_items_count = 0
     updated_items_count = 0
 
-    # 1st website:
-    scaped_items = scrape_plaidonline()
+    ### 1st website:
+    scraped_items = scrape_plaidonline()
 
-    for item_data in scaped_items:
+    for item_data in scraped_items:
         if (item_title := item_data.get("item_title")) in existing_items:
             item_url = item_data.get("item_url")
             item_new_price = item_data.get("item_price")
@@ -65,9 +66,12 @@ if __name__ == "__main__":
                 [updated_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS),]
             )
 
+    ### 2nd website:
+    scraped_items = scrape_enasco()
+
     # report to telegram
     telegram_bot.send_new_items_added(new_items_count)
     telegram_bot.send_new_items_updated(updated_items_count)
 
     save_data(updated_items_df)
-    telegram_bot.send_alert("Done.")
+    # telegram_bot.send_alert("Done.")

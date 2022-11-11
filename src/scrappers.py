@@ -112,6 +112,10 @@ def scrape_plaidonline():
     return items
 
 
+def scrape_enasco():
+    pass
+
+
 # class ScrappersFunctionsMapping:
 #     """ Mapping functions for each website """
 
