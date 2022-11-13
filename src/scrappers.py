@@ -3,13 +3,13 @@ Scrappers functions.
 Each website has a different scrapping function.
 
 # List of urls:
-# https://plaidonline.com/products?closeout=True
-# https://www.enasco.com/c/Clearance
-# https://www.gamenerdz.com/sale-clearance
-# https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/
-# https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F
-# https://camerareadycosmetics.com/collections/makeup-sale
-# https://www.academy.com/c/shops/sale
+# https://plaidonline.com/products?closeout=True # done
+# https://www.enasco.com/c/Clearance # done
+# https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
+# https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
+# https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # blocked by robots.txt and dynamic website - JS to load content
+# https://camerareadycosmetics.com/collections/makeup-sale # blocked by robots.txt
+# https://www.academy.com/c/shops/sale # done
 # https://www.officesupply.com/clearance
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials
 # https://www.nordstromrack.com/clearance
@@ -21,9 +21,10 @@ Each website has a different scrapping function.
 """
 from http import HTTPStatus
 from time import sleep
-from bs4 import BeautifulSoup
 
+from bs4 import BeautifulSoup
 import requests
+
 from helpers import get_domain_name, extract_price, DATA_COLUMNS
 from constants import PAGES_SLEEP_INTERVAL
 from telegram_bot_utils import TelegramBot
@@ -205,18 +206,18 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return items
-
-    def scrape_gamenerdz(self):
+    
+    def scrape_academy(self):
         """
-        Scrapper for domain_name = "https://www.gamenerdz.com/"
+        Scrapper for domain_name = "https://www.academy.com/"
         Args:
             _
         Return:
             items (list): list of scrapped items.
         """
-        domain_name = "https://www.gamenerdz.com/"
-        # base_url = "https://www.gamenerdz.com/sale-clearance" # will have out of stock items
-        base_url = "https://www.gamenerdz.com/sale-clearance?in_stock=In+Stock+Only"  # in-stock only
+        domain_name = "https://www.academy.com/"
+        base_url = "https://www.academy.com/c/shops/sale" # may contain out of stock
+        base_url = "https://www.academy.com/c/shops/sale?&facet=%27facet_InvInStock%27:%27Y%27" # in stock only
         items = []
 
         try:
@@ -294,3 +295,4 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return items
+    
