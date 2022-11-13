@@ -3,6 +3,7 @@ Telegram bot Class and helpers methods.
 """
 
 from telegram import Bot, ParseMode
+from telegram.error import RetryAfter, TimedOut
 
 from constants import TELEGRAM_BOT_API_KEY, CHAT_ID
 
@@ -13,30 +14,52 @@ class TelegramBot:
         self.chat_id = CHAT_ID
         self.emojis = {
             "ALERT": "⚠️⚠️",
+            "ERROR": "❌❌",
             "ADD": "🆕✨",
             "UPDATE": "🔃✨",
             "UP": "⬆️📈",
             "DOWN": "⬇️📉",
         }
 
-    def _send_message(self, message: str, emoji: str = None) -> None:
+    def _send_message(
+        self, message: str, emoji: str = None, stdout: bool = False
+    ) -> None:
         """
         Send message to telegram chat.
         Args:
             message (str): message to send.
             emoji (str): prefix emoji to use before message.
+            stdout (bool): print/log statements to terminal
         Returns:
             None
         """
+
         if emoji in self.emojis.keys():
-            message = f"{self.emojis.get(emoji)} {message}"
+            message = f"{self.emojis.get(emoji)}  {message}"
+
+        if stdout:
+            print(message)
 
         try:
             self.bot_client.send_message(
                 chat_id=self.chat_id, text=f"{message}", parse_mode=ParseMode.HTML
             )
+        except (RetryAfter, TimedOut):
+            print(f"Error sending message, '{e.message}'.")
+
+            # maybe timeout - try to cool down
+            from time import sleep
+
+            sleep(1)
+            try:
+                self.bot_client.send_message(
+                    chat_id=self.chat_id, text=f"{message}", parse_mode=ParseMode.HTML
+                )
+            except Exception as e:  # -_-
+                print(f"Error sending message again, '{e.message}'")
+        
         except Exception as e:
-            print(f"Error sending message, {e.message}")
+            print(f"Error sending message, '{e.message}'.")
 
     def send_new_item_added(
         self, item_title: str, item_url: str, item_price: float
@@ -129,9 +152,21 @@ class TelegramBot:
             None
         """
         emoji = "ALERT"
-        self._send_message(message=message, emoji=emoji)
+        self._send_message(message=message, emoji=emoji, stdout=True)
+
+    def send_error(self, message: str) -> None:
+        """
+        Send an error message.
+
+        Args:
+            message (str): message to send.
+        Returns:
+            None
+        """
+        emoji = "ERROR"
+        self._send_message(message=message, emoji=emoji, stdout=True)
 
 
 if __name__ == "__main__":
     tel = TelegramBot()
-    tel.send_alert("TEST")
+    tel.send_error("TEST")

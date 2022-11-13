@@ -42,10 +42,10 @@ if __name__ == "__main__":
     telegram_bot.send_alert(f"Start scraping...")
 
     ### 1st website:
-    scraped_items.extend(scrape_plaidonline())
+    scraped_items.extend(scrape_plaidonline()) # ~17 sec
 
     ### 2nd website:
-    scraped_items.extend(scrape_enasco())
+    scraped_items.extend(scrape_enasco())  # ~128 sec
 
     ### check/updated items
     for item_data in scraped_items:
