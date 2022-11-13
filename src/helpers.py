@@ -124,8 +124,10 @@ def get_domain_name(url: str = None) -> str:
     """
     Using regex; extract domain name.
 
-
-        extracted_price(`float`): The extracted price.
+    Args:
+        url (`str`): Full website url to extract thr domain from.
+    Returns:
+        domain (`str`): Extracted domain name.
     """
     pattern = r"^(?:http:\/\/|www\.|https:\/\/)([^\/]+)"
 
