@@ -6,7 +6,7 @@ import os
 from pathlib import Path
 import re
 from datetime import datetime, timezone
-from typing import List, Set
+from typing import List
 import pandas as pd
 
 
@@ -35,7 +35,7 @@ def load_data(
     full_file_path = os.path.join(full_dir_path, data_file_name)
 
     if not os.path.exists(full_dir_path):
-        return pd.DataFrame(columns=DATA_COLUMNS)  # first run
+        return pd.DataFrame(columns=DATA_COLUMNS)  # just first run
     try:
         return pd.read_csv(full_file_path)
     except (pd.errors.EmptyDataError, FileNotFoundError):
@@ -68,13 +68,23 @@ def save_data(
 def list_existing_items(dataframe: pd.DataFrame) -> List:
     """
     Return list of existing items
+
+    Args:
+        dataframe (dataframe): dataframe to extract the existing items from.
+    Returns:
+        items (list): List of existing items.
     """
     return dataframe["item_title"].to_list()
 
 
 def get_item_price(dataframe: pd.DataFrame, item_title: str) -> float:
     """
-    Check existing item price.
+    Get an item's existing price.
+    Args:
+        dataframe (dataframe): dataframe of the items.
+        item_title (str): title of the item.
+    Returns:
+        item_price (float): Item price.
     """
     try:
         return dataframe[dataframe["item_title"] == item_title]["item_price"].values[0]
@@ -85,6 +95,11 @@ def get_item_price(dataframe: pd.DataFrame, item_title: str) -> float:
 def updated_datetime(now=datetime.now(tz=timezone.utc)) -> datetime:
     """
     Return Updated datetime
+
+    Args:
+        _
+    Returns:
+        now (datetime): Current datetime.
     """
     return now
 
@@ -94,6 +109,14 @@ def update_item_price(
 ) -> pd.DataFrame:
     """
     Update existing item price.
+
+    Args:
+        dataframe (dataframe): dataframe of the items.
+        item_title (str): title of the item.
+        new_item_price (float): updated item price to update.
+    Returns:
+        dataframe (dataframe): updated dataframe of the items.
+
     """
     dataframe.loc[
         dataframe["item_title"] == item_title, ["item_price", "updated_at"]
@@ -106,10 +129,10 @@ def extract_price(text_price: str = None) -> float:
     Using regex; extract price from a text.
 
     Args:
-        text_price(`str`): The text that contains the price.
+        text_price (str): The text that contains the price.
 
     Returns:
-        extracted_price(`float`): The extracted price.
+        extracted_price (float): The extracted price.
     """
     if not text_price:
         return 0
@@ -125,10 +148,29 @@ def get_domain_name(url: str = None) -> str:
     Using regex; extract domain name.
 
     Args:
-        url (`str`): Full website url to extract thr domain from.
+        url (str): Full website url to extract thr domain from.
     Returns:
-        domain (`str`): Extracted domain name.
+        domain (str): Extracted domain name.
     """
     pattern = r"^(?:http:\/\/|www\.|https:\/\/)([^\/]+)"
 
     return re.findall(pattern, url)[0]
+
+
+def get_elapsed_time(
+    start_date: datetime, end_date: datetime = datetime.now()
+) -> float:
+    """
+    Return elapsed time (seconds)
+    
+    Args:
+        start_date (datetime): start datetime.
+        end_date (datetime): end datetime.
+
+    Returns:
+        elapsed_time (float): rounded total elapsed time in seconds.
+    """
+    return round(
+        datetime.strptime(str(end_date), "%Y-%m-%d %H:%M:%S.%f")
+        - datetime.strptime(str(start_date), "%Y-%m-%d %H:%M:%S.%f")
+    ).total_seconds()

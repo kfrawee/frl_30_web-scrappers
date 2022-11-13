@@ -115,6 +115,12 @@ def scrape_plaidonline():
 def scrape_enasco():
     domain_url = f"https://www.enasco.com/c/Clearance?page={52}&gridstyle=gridStyle&text=&q=%3Arelevance"
 
+    # domain_name = "https://plaidonline.com/"
+    # base_url = "https://plaidonline.com/products?closeout=True"
+    items = []
+
+    return items
+
 
 # class ScrappersFunctionsMapping:
 #     """ Mapping functions for each website """

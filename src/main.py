@@ -10,6 +10,7 @@ from helpers import (
     get_item_price,
     updated_datetime,
     update_item_price,
+    get_elapsed_time,
     DATA_COLUMNS,
 )
 
@@ -27,25 +28,26 @@ if __name__ == "__main__":
 
     os.system("cls || clear")
 
-    # scrappers = ScrappersFunctionsMapping() # TODO
-    # scrappers.start() # TODO
-
     # load existing items data
     existing_items_df = load_data()
     existing_items = list_existing_items(existing_items_df)
-
     telegram_bot.send_alert(f"Loaded {len(existing_items)} existing items.")
-    telegram_bot.send_alert(f"Start scraping...")
 
     updated_items_df = existing_items_df.copy()
     now = updated_datetime()
-
     new_items_count = 0
     updated_items_count = 0
+    scraped_items = list()
+
+    telegram_bot.send_alert(f"Start scraping...")
 
     ### 1st website:
-    scraped_items = scrape_plaidonline()
+    scraped_items.extend(scrape_plaidonline())
 
+    ### 2nd website:
+    scraped_items.extend(scrape_enasco())
+
+    ### check/updated items
     for item_data in scraped_items:
         if (item_title := item_data.get("item_title")) in existing_items:
             item_url = item_data.get("item_url")
@@ -66,12 +68,10 @@ if __name__ == "__main__":
                 [updated_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS),]
             )
 
-    ### 2nd website:
-    scraped_items = scrape_enasco()
+    ### Save data
+    save_data(updated_items_df)
 
     # report to telegram
     telegram_bot.send_new_items_added(new_items_count)
     telegram_bot.send_new_items_updated(updated_items_count)
-
-    save_data(updated_items_df)
-    # telegram_bot.send_alert("Done.")
+    telegram_bot.send_alert(f"Finished in {get_elapsed_time(now)}")

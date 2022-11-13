@@ -23,10 +23,10 @@ class TelegramBot:
         """
         Send message to telegram chat.
         Args:
-            message (`str`): message to send.
-            emoji (`str`): prefix emoji to use before message.
+            message (str): message to send.
+            emoji (str): prefix emoji to use before message.
         Returns:
-            `None`
+            None
         """
         if emoji in self.emojis.keys():
             message = f"{self.emojis.get(emoji)} {message}"
@@ -45,11 +45,11 @@ class TelegramBot:
         Send message with new item added.
 
         Args:
-            item_title (`str`):  name of the item.
-            item_url (`str`): url of the item.
-            item_price (`float`): price of the item.
+            item_title (str):  name of the item.
+            item_url (str): url of the item.
+            item_price (float): price of the item.
         Returns:
-            `None`
+            None
         """
         emoji = "ADD"
         message = (
@@ -64,9 +64,9 @@ class TelegramBot:
         Send message with new items added.
 
         Args:
-            items_count (`int`):  number of newly added items.
+            items_count (int):  number of newly added items.
         Returns:
-            `None`
+            None
         """
         emoji = "ADD"
         message = f"<b>Hey! New {items_count} items were added!</b>\n"
@@ -78,9 +78,9 @@ class TelegramBot:
         Send message with new items updated.
 
         Args:
-            items_count (`int`):  number of newly updated items.
+            items_count (int):  number of newly updated items.
         Returns:
-            `None`
+            None
         """
         emoji = "UPDATE"
         message = f"<b>Hey! New {items_count} items were updated!</b>\n"
@@ -98,12 +98,12 @@ class TelegramBot:
         Send message if item's price is updated.
 
         Args:
-            item_title (`str`): name of the item.
-            item_url (`str`): url of the item.
-            item_old_price (`float`): old price of the item.
-            item_new_price (`float`): new price of the item.
+            item_title (str): name of the item.
+            item_url (str): url of the item.
+            item_old_price (float): old price of the item.
+            item_new_price (float): new price of the item.
         Returns:
-            `None`
+            None
         """
         if item_old_price == item_new_price:
             return
@@ -124,9 +124,9 @@ class TelegramBot:
         Send an alert message.
 
         Args:
-            message (`str`): message to send.
+            message (str): message to send.
         Returns:
-            `None`
+            None
         """
         emoji = "ALERT"
         self._send_message(message=message, emoji=emoji)
