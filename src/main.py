@@ -74,4 +74,4 @@ if __name__ == "__main__":
     # report to telegram
     telegram_bot.send_new_items_added(new_items_count)
     telegram_bot.send_new_items_updated(updated_items_count)
-    telegram_bot.send_alert(f"Finished in {get_elapsed_time(now)}")
+    telegram_bot.send_alert(f"Finished in {get_elapsed_time(start_date=now)} seconds.")

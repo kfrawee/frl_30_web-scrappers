@@ -120,14 +120,3 @@ def scrape_enasco():
     items = []
 
     return items
-
-
-# class ScrappersFunctionsMapping:
-#     """ Mapping functions for each website """
-
-#     def __init__(self):
-#         self.websites = {"plaidonline": scrape_plaidonline()}
-
-#     def start(self):
-#         for website in self.websites:
-#             self.websites.get(website)

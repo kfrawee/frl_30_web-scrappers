@@ -92,18 +92,6 @@ def get_item_price(dataframe: pd.DataFrame, item_title: str) -> float:
         return 0.0
 
 
-def updated_datetime(now=datetime.now(tz=timezone.utc)) -> datetime:
-    """
-    Return Updated datetime
-
-    Args:
-        _
-    Returns:
-        now (datetime): Current datetime.
-    """
-    return now
-
-
 def update_item_price(
     dataframe: pd.DataFrame, item_title: str, new_item_price: float
 ) -> pd.DataFrame:
@@ -157,20 +145,34 @@ def get_domain_name(url: str = None) -> str:
     return re.findall(pattern, url)[0]
 
 
-def get_elapsed_time(
-    start_date: datetime, end_date: datetime = datetime.now()
-) -> float:
+def updated_datetime(now=datetime.now(tz=timezone.utc)) -> datetime:
+    """
+    Return Updated datetime
+
+    Args:
+        _
+    Returns:
+        now (datetime): Current datetime.
+    """
+    return now
+
+
+def get_elapsed_time(start_date: datetime) -> float:
     """
     Return elapsed time (seconds)
     
     Args:
         start_date (datetime): start datetime.
-        end_date (datetime): end datetime.
 
     Returns:
         elapsed_time (float): rounded total elapsed time in seconds.
     """
     return round(
-        datetime.strptime(str(end_date), "%Y-%m-%d %H:%M:%S.%f")
-        - datetime.strptime(str(start_date), "%Y-%m-%d %H:%M:%S.%f")
-    ).total_seconds()
+        (
+            datetime.strptime(
+                str(datetime.now(tz=timezone.utc))[:-6], "%Y-%m-%d %H:%M:%S.%f"
+            )
+            - datetime.strptime(str(start_date)[:-6], "%Y-%m-%d %H:%M:%S.%f")
+        ).total_seconds(),
+        2,
+    )
