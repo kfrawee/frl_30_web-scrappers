@@ -57,7 +57,7 @@ class TelegramBot:
                 )
             except Exception as e:  # -_-
                 print(f"Error sending message again, '{e.message}'")
-        
+
         except Exception as e:
             print(f"Error sending message, '{e.message}'.")
 

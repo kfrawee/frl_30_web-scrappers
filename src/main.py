@@ -14,11 +14,7 @@ from helpers import (
     DATA_COLUMNS,
 )
 
-from scrappers import (
-    scrape_plaidonline,
-    scrape_enasco,
-    # ScrappersFunctionsMapping
-)
+from scrappers import Scrapper
 from telegram_bot_utils import TelegramBot
 
 telegram_bot = TelegramBot()
@@ -35,19 +31,25 @@ if __name__ == "__main__":
 
     updated_items_df = existing_items_df.copy()
     now = updated_datetime()
-    new_items_count = 0
-    updated_items_count = 0
     scraped_items = list()
 
     telegram_bot.send_alert(f"Start scraping...")
 
+    ### SCRAPPERS
+    # comment the lines to skip a website
+    scrappers = Scrapper()
     ### 1st website:
-    scraped_items.extend(scrape_plaidonline()) # ~17 sec
+    # scraped_items.extend(scrappers.scrape_plaidonline()) # ~17 sec
 
     ### 2nd website:
-    scraped_items.extend(scrape_enasco())  # ~128 sec
+    # scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
+
+    ## 3rd website
+    scraped_items.extend(scrappers.scrape_gamenerdz())  # ~20 sec
 
     ### check/updated items
+    new_items_count = 0
+    updated_items_count = 0
     for item_data in scraped_items:
         if (item_title := item_data.get("item_title")) in existing_items:
             item_url = item_data.get("item_url")
