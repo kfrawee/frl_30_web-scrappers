@@ -45,7 +45,6 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
 
     ## 3rd website
-    scraped_items.extend(scrappers.scrape_gamenerdz())  # ~20 sec
 
     ### check/updated items
     new_items_count = 0

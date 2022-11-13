@@ -9,7 +9,7 @@ Each website has a different scrapping function.
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # blocked by robots.txt and dynamic website - JS to load content
 # https://camerareadycosmetics.com/collections/makeup-sale # blocked by robots.txt
-# https://www.academy.com/c/shops/sale # done
+# https://www.academy.com/c/shops/sale # prices are not consistent
 # https://www.officesupply.com/clearance
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials
 # https://www.nordstromrack.com/clearance
@@ -163,16 +163,16 @@ class Scrapper:
                 for product in products:
                     product_data = product.find(
                         class_="row-eq-height ea-product-cell-name"
-                    ).a
+                    )
                     # item_title
-                    item_title = product_data.string
+                    item_title = product_data.a.string
                     # item_url
-                    item_url = product_data.get("href")
+                    item_url = product_data.a.get("href")
                     # item_price
                     try:
                         # try to get after price - if exists
                         item_price = extract_price(
-                            product.find(class_="ea-product-cell-price text-red").string
+                            product.find(class_="ea-product-cell-price").string
                         )
                     except AttributeError:  # only old price
                         item_price = extract_price(
@@ -206,7 +206,7 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return items
-    
+
     def scrape_academy(self):
         """
         Scrapper for domain_name = "https://www.academy.com/"
@@ -216,8 +216,8 @@ class Scrapper:
             items (list): list of scrapped items.
         """
         domain_name = "https://www.academy.com/"
-        base_url = "https://www.academy.com/c/shops/sale" # may contain out of stock
-        base_url = "https://www.academy.com/c/shops/sale?&facet=%27facet_InvInStock%27:%27Y%27" # in stock only
+        base_url = "https://www.academy.com/c/shops/sale"  # may contain out of stock
+        # base_url = "https://www.academy.com/c/shops/sale?&facet=%27facet_InvInStock%27:%27Y%27" # in stock only ## dynamic: won't work
         items = []
 
         try:
@@ -228,34 +228,24 @@ class Scrapper:
 
             # get num_of_pages
             try:
-                raw_pages_data = soup.find(class_="pagination-data_view").text
-                # 'Page\n\t\t\t\t1 of 62' > get the max number after 'of'
-                no_of_pages = int(raw_pages_data[raw_pages_data.find("of") + 2 :])
+                raw_pages_data = soup.find_all(class_="numberRangePagination_navToPage")
+                no_of_pages = int(raw_pages_data[-1].text)
             except Exception as e:
                 print("Error getting pages", e.args)
-                no_of_pages = 62
+                no_of_pages = 48
 
             # scrape pages
-            for page_no in range(no_of_pages):
-                page_url = (
-                    base_url
-                    + f"?page={page_no}&gridstyle=gridStyle&text=&q=%3Arelevance"
-                )
+            for page_no in range(1, no_of_pages + 1):
+                page_url = base_url + f"&page_{page_no}"
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
                 soup = BeautifulSoup(res.content, "lxml")
 
-                products = soup.find_all(
-                    class_="similar-products__item col-xs-12 col-sm-6 col-md-4 slp-eq-height"
-                )
+                products = soup.find_all(class_="css-18cbcd1")
                 for product in products:
-                    product_data = product.find(
-                        class_="row-eq-height ea-product-cell-name"
-                    ).a
-                    # item_title
-                    item_title = product_data.string
-                    # item_url
+                    product_data = product.find(class_="product-card-simple-title")
+                    item_title = product_data.get("aria-label")
                     item_url = product_data.get("href")
                     # item_price
                     try:
@@ -295,4 +285,3 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return items
-    
