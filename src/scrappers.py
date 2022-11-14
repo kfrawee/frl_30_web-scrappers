@@ -38,6 +38,7 @@ class Scrapper:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
         }
         self.telegram_bot = TelegramBot()
+        self.items = list()
 
     def scrape_plaidonline(self):
         """
@@ -50,7 +51,6 @@ class Scrapper:
         """
         domain_name = "https://plaidonline.com/"
         base_url = "https://plaidonline.com/products?closeout=True"
-        items = []
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -100,7 +100,7 @@ class Scrapper:
                     )
 
                     # append item data to the dictionary
-                    items.append(
+                    self.items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -120,7 +120,7 @@ class Scrapper:
             error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
-        return items
+        return self.items
 
     def scrape_enasco(self):
         """
@@ -132,7 +132,6 @@ class Scrapper:
         """
         domain_name = "https://www.enasco.com/"
         base_url = "https://www.enasco.com/c/Clearance"
-        items = []
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -185,7 +184,7 @@ class Scrapper:
                         )
 
                     # append item data to the dictionary
-                    items.append(
+                    self.items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -206,7 +205,7 @@ class Scrapper:
             error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
-        return items
+        return self.items
 
     def scrape_nordstromrack(self):
         """
@@ -218,7 +217,6 @@ class Scrapper:
         """
         domain_name = "https://www.nordstromrack.com/"
         base_url = "https://www.nordstromrack.com/clearance"
-        items = []
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -231,7 +229,6 @@ class Scrapper:
                 num_of_items = int(soup.find(class_="jHG4O").text.strip(" items"))
                 item_per_page = 72
                 no_of_pages = round(num_of_items / item_per_page)
-                no_of_pages
             except Exception as e:
                 print("Error getting pages", e)
                 no_of_pages = 140  # ~
@@ -271,7 +268,7 @@ class Scrapper:
                             item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    items.append(
+                    self.items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -292,7 +289,7 @@ class Scrapper:
             error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
-        return items
+        return self.items
 
     def scrape_altomusic(self):
         """
@@ -304,7 +301,6 @@ class Scrapper:
         """
         domain_name = "https://www.altomusic.com/"
         base_url = "https://www.altomusic.com/by-category/hot-deals/on-sale"
-        items = []
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -318,7 +314,6 @@ class Scrapper:
                 items_per_page = total_items = int(raw_pages_data[1].string)
                 total_items = int(raw_pages_data[-1].string)
                 no_of_pages = round(total_items / items_per_page)
-                no_of_pages
             except Exception as e:
                 print("Error getting pages", e)
                 no_of_pages = 23  # ~
@@ -331,7 +326,7 @@ class Scrapper:
 
                 soup = BeautifulSoup(res.content, "lxml")
 
-                products = soup.find_all(class_="ivm_G _PT1R")
+                products = soup.find_all(attrs={"class": "details"})
 
                 for product in products:
                     product_data = product.find(class_="product-item-link")
@@ -351,7 +346,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    items.append(
+                    self.items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -370,4 +365,4 @@ class Scrapper:
             error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
-        return items
+        return self.items

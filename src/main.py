@@ -36,7 +36,7 @@ if __name__ == "__main__":
     telegram_bot.send_alert(f"Start scraping...")
 
     ### SCRAPPERS
-    # comment the lines to skip a website
+    # comment lines to skip a website or to update items from a certain website
     scrappers = Scrapper()
     ### 1st website:
     # scraped_items.extend(scrappers.scrape_plaidonline()) # ~17 sec
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_nordstromrack())  # ~522.68 sec
 
     ### 4th website:
-    scraped_items.extend(scrappers.scrape_altomusic())
+    scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
 
     ### check/updated items
     new_items_count = 0
