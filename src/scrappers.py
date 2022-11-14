@@ -17,7 +17,7 @@ Each website has a different scrapping function.
 # https://www.gamestop.com/deals # TODO check! dynamic website - JS to load content
 # https://www.altomusic.com/by-category/hot-deals/on-sale # done
 # https://www.muscleandstrength.com/store/category/clearance.html # done
-# https://www.scheels.com/c/all/sale
+# https://www.scheels.com/c/all/sale # wip
 """
 from http import HTTPStatus
 from time import sleep
