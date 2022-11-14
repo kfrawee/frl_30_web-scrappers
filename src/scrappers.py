@@ -8,19 +8,21 @@ Each website has a different scrapping function.
 # https://www.nordstromrack.com/clearance # done
 # https://www.altomusic.com/by-category/hot-deals/on-sale # done
 # https://www.muscleandstrength.com/store/category/clearance.html # done
-# https://camerareadycosmetics.com/collections/makeup-sale # done
+# https://camerareadycosmetics.com/collections/makeup-sale # done 
 
 # https://www.scheels.com/c/all/sale # wip ~ 600 page
 
+# CHECKED - NOT WORKING
 # https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # dynamic website - JS to load content
 
-# https://www.academy.com/c/shops/sale # TODO check! prices are not consistent
-# https://www.officesupply.com/clearance # TODO check! blocked by robots.txt, <Response [403]>
-# https://entirelypetspharmacy.com/s.html?tag=sale-specials # TODO check! dynamic website - JS to load content 
-# https://www.shopatdean.com/collections/clearance-closeouts-overstock #  TODO check! dynamic website - JS to load content
-# https://www.gamestop.com/deals # TODO check! dynamic website - JS to load content
+# TODO RE-CHECK
+# https://www.officesupply.com/clearance # blocked by robots.txt, <Response [403]>
+# https://www.academy.com/c/shops/sale #  prices are not consistent
+# https://entirelypetspharmacy.com/s.html?tag=sale-specials # dynamic website - JS to load content 
+# https://www.shopatdean.com/collections/clearance-closeouts-overstock #  dynamic website - JS to load content
+# https://www.gamestop.com/deals # dynamic website - JS to load content
 """
 from http import HTTPStatus
 from time import sleep
@@ -510,7 +512,7 @@ class Scrapper:
                 products = soup.find_all(attrs={"class": "grid-item"})
 
                 for product in products:
-                    product_data = soup.find(class_="grid-product__title")
+                    product_data = product.find(class_="grid-product__title")
                     # item_title
                     item_title = product_data.a.string.strip()
                     # # item_url
