@@ -13,14 +13,15 @@ Each website has a different scrapping function.
 # https://www.officesupply.com/clearance # blocked by robots.txt, <Response [403]>
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # TODO check! dynamic website - JS to load content 
 # https://www.nordstromrack.com/clearance # done
-# https://www.shopatdean.com/collections/clearance-closeouts-overstock
-# https://www.gamestop.com/deals
-# https://www.altomusic.com/by-category/hot-deals/on-sale
+# https://www.shopatdean.com/collections/clearance-closeouts-overstock #  TODO check! dynamic website - JS to load content
+# https://www.gamestop.com/deals # TODO check! dynamic website - JS to load content
+# https://www.altomusic.com/by-category/hot-deals/on-sale # wip
 # https://www.muscleandstrength.com/store/category/clearance.html
 # https://www.scheels.com/c/all/sale
 """
 from http import HTTPStatus
 from time import sleep
+import traceback
 
 from bs4 import BeautifulSoup
 import requests
@@ -32,7 +33,10 @@ from telegram_bot_utils import TelegramBot
 
 class Scrapper:
     def __init__(self) -> None:
-        self.headers = {"Content-Type": "application/json"}
+        self.headers = {
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
+        }
         self.telegram_bot = TelegramBot()
 
     def scrape_plaidonline(self):
@@ -95,14 +99,14 @@ class Scrapper:
                         "href"
                     )
 
-                    # append item dictionary
+                    # append item data to the dictionary
                     items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
                             "item_url": domain_name.strip("/") + item_url
                             if item_url
-                            else "/",
+                            else domain_name,
                         }
                     )
 
@@ -113,9 +117,7 @@ class Scrapper:
             requests.exceptions.ConnectionError,
             Exception,  # un-captured exception
         ) as e:
-            error_message = (
-                f"Error while trying to scrape  {get_domain_name(base_url)}: '{e}'"
-            )
+            error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
         return items
@@ -182,14 +184,14 @@ class Scrapper:
                             ).string
                         )
 
-                    # append item dictionary
+                    # append item data to the dictionary
                     items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
                             "item_url": domain_name.strip("/") + item_url
                             if item_url
-                            else "/",
+                            else domain_name,
                         }
                     )
 
@@ -201,9 +203,7 @@ class Scrapper:
             requests.exceptions.ConnectionError,
             Exception,  # un-captured exception
         ) as e:
-            error_message = (
-                f"Error while trying to scrape  {get_domain_name(base_url)}: '{e}'"
-            )
+            error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
         return items
@@ -234,51 +234,50 @@ class Scrapper:
                 no_of_pages
             except Exception as e:
                 print("Error getting pages", e)
-                no_of_pages = 140 # ~
+                no_of_pages = 140  # ~
 
             # scrape pages
             for page_no in range(1, no_of_pages + 1):
-                page_url = (
-                    base_url
-                    + f"?page={page_no}"
-                )
+                page_url = base_url + f"?page={page_no}"
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
                 soup = BeautifulSoup(res.content, "lxml")
 
-                products = soup.find_all(
-                    class_="similar-products__item col-xs-12 col-sm-6 col-md-4 slp-eq-height"
-                )
+                products = soup.find_all(class_="ivm_G _PT1R")
+
                 for product in products:
-                    product_data = product.find(
-                        class_="row-eq-height ea-product-cell-name"
-                    )
+                    product_data = product.find(class_="kKGYj TpwNx")
                     # item_title
                     item_title = product_data.a.string
                     # item_url
                     item_url = product_data.a.get("href")
                     # item_price
                     try:
-                        # try to get after price - if exists
+                        # get the lowest price
                         item_price = extract_price(
-                            product.find(class_="ea-product-cell-price").string
+                            product.select("span.qHz0a.BkySr.EhCiu.t1yis.sxEtG.jRV6p")[
+                                0
+                            ].string.split("–")[0]
                         )
-                    except AttributeError:  # only old price
-                        item_price = extract_price(
-                            product.find(
-                                class_="similar-products__data_old-price"
-                            ).string
-                        )
+                    except IndexError:
+                        try:
+                            item_price = extract_price(
+                                product.select("span.qHz0a.EhCiu.t1yis.sxEtG.jRV6p")[
+                                    0
+                                ].string
+                            )
+                        except (IndexError, Exception) as e:
+                            item_price = 0.0  # no price available
 
-                    # append item dictionary
+                    # append item data to the dictionary
                     items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
                             "item_url": domain_name.strip("/") + item_url
                             if item_url
-                            else "/",
+                            else domain_name,
                         }
                     )
 
@@ -290,9 +289,85 @@ class Scrapper:
             requests.exceptions.ConnectionError,
             Exception,  # un-captured exception
         ) as e:
-            error_message = (
-                f"Error while trying to scrape  {get_domain_name(base_url)}: '{e}'"
-            )
+            error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
+            self.telegram_bot.send_error(error_message)
+
+        return items
+
+    def scrape_altomusic(self):
+        """
+        Scrapper for domain_name = "https://www.altomusic.com/"
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
+        domain_name = "https://www.altomusic.com/"
+        base_url = "https://www.altomusic.com/by-category/hot-deals/on-sale"
+        items = []
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            try:
+                raw_pages_data = soup.find_all(attrs={"class": "toolbar-number"})
+                items_per_page = total_items = int(raw_pages_data[1].string)
+                total_items = int(raw_pages_data[-1].string)
+                no_of_pages = round(total_items / items_per_page)
+                no_of_pages
+            except Exception as e:
+                print("Error getting pages", e)
+                no_of_pages = 23  # ~
+
+            # scrape pages
+            for page_no in range(1, no_of_pages + 1):
+                page_url = base_url + f"?p={page_no}"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
+
+                products = soup.find_all(class_="ivm_G _PT1R")
+
+                for product in products:
+                    product_data = product.find(class_="product-item-link")
+                    # item_title
+                    item_title = product_data.string.strip()
+                    # # item_url
+                    item_url = product_data.get("href")
+                    # item_price
+                    try:
+                        # combine price with decimal
+                        init_price = product.find(class_="price").string
+                        dec_price = product.find(class_="decimal")
+                        if dec_price:
+                            init_price += dec_price.string
+                        item_price = extract_price(init_price)
+                    except Exception:
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": item_url if item_url else domain_name,
+                        }
+                    )
+
+                sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
             self.telegram_bot.send_error(error_message)
 
         return items

@@ -44,8 +44,11 @@ if __name__ == "__main__":
     ### 2nd website:
     # scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
 
-    ## 3rd website # TODO
-    scraped_items.extend(scrappers.scrape_nordstromrack()) # 
+    ### 3rd website:
+    # scraped_items.extend(scrappers.scrape_nordstromrack())  # ~522.68 sec
+
+    ### 4th website:
+    scraped_items.extend(scrappers.scrape_altomusic())
 
     ### check/updated items
     new_items_count = 0

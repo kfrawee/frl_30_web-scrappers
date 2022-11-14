@@ -44,7 +44,7 @@ class TelegramBot:
             self.bot_client.send_message(
                 chat_id=self.chat_id, text=f"{message}", parse_mode=ParseMode.HTML
             )
-        except (RetryAfter, TimedOut):
+        except (RetryAfter, TimedOut) as e:
             print(f"Error sending message, '{e.message}'.")
 
             # maybe timeout - try to cool down

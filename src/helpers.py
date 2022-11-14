@@ -142,7 +142,7 @@ def get_domain_name(url: str = None) -> str:
     """
     pattern = r"^(?:http:\/\/|www\.|https:\/\/)([^\/]+)"
 
-    return re.findall(pattern, url)[0]
+    return re.findall(pattern, url)[0].strip("www.")
 
 
 def updated_datetime(now=datetime.now(tz=timezone.utc)) -> datetime:
