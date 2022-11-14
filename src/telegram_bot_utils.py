@@ -165,8 +165,3 @@ class TelegramBot:
         """
         emoji = "ERROR"
         self._send_message(message=message, emoji=emoji, stdout=True)
-
-
-if __name__ == "__main__":
-    tel = TelegramBot()
-    tel.send_error("TEST")

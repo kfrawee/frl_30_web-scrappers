@@ -39,12 +39,13 @@ if __name__ == "__main__":
     # comment the lines to skip a website
     scrappers = Scrapper()
     ### 1st website:
-    scraped_items.extend(scrappers.scrape_plaidonline()) # ~17 sec
+    # scraped_items.extend(scrappers.scrape_plaidonline()) # ~17 sec
 
     ### 2nd website:
-    scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
+    # scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
 
     ## 3rd website # TODO
+    scraped_items.extend(scrappers.scrape_nordstromrack()) # 
 
     ### check/updated items
     new_items_count = 0

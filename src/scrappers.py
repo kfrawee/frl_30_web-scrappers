@@ -9,10 +9,10 @@ Each website has a different scrapping function.
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # blocked by robots.txt and dynamic website - JS to load content
 # https://camerareadycosmetics.com/collections/makeup-sale # blocked by robots.txt
-# https://www.academy.com/c/shops/sale # prices are not consistent
-# https://www.officesupply.com/clearance
-# https://entirelypetspharmacy.com/s.html?tag=sale-specials
-# https://www.nordstromrack.com/clearance
+# https://www.academy.com/c/shops/sale # TODO check! prices are not consistent
+# https://www.officesupply.com/clearance # blocked by robots.txt, <Response [403]>
+# https://entirelypetspharmacy.com/s.html?tag=sale-specials # TODO check! dynamic website - JS to load content 
+# https://www.nordstromrack.com/clearance # done
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock
 # https://www.gamestop.com/deals
 # https://www.altomusic.com/by-category/hot-deals/on-sale
@@ -25,7 +25,7 @@ from time import sleep
 from bs4 import BeautifulSoup
 import requests
 
-from helpers import get_domain_name, extract_price, DATA_COLUMNS
+from helpers import get_domain_name, extract_price
 from constants import PAGES_SLEEP_INTERVAL
 from telegram_bot_utils import TelegramBot
 
@@ -38,6 +38,7 @@ class Scrapper:
     def scrape_plaidonline(self):
         """
         Scrapper for domain_name = "https://plaidonline.com/"
+
         Args:
             _
         Return:
@@ -66,7 +67,7 @@ class Scrapper:
 
                 no_of_pages = sorted(map(int, no_of_pages))
             except Exception as e:
-                print("Error getting pages", e.args)
+                print("Error getting pages", e)
                 no_of_pages = 5
             # scrape pages
             for page_no in no_of_pages:
@@ -128,7 +129,7 @@ class Scrapper:
             items (list): list of scrapped items.
         """
         domain_name = "https://www.enasco.com/"
-        base_url = "https://www.gamenerdz.com/sale-clearance"
+        base_url = "https://www.enasco.com/c/Clearance"
         items = []
 
         try:
@@ -143,7 +144,7 @@ class Scrapper:
                 # 'Page\n\t\t\t\t1 of 62' > get the max number after 'of'
                 no_of_pages = int(raw_pages_data[raw_pages_data.find("of") + 2 :])
             except Exception as e:
-                print("Error getting pages", e.args)
+                print("Error getting pages", e)
                 no_of_pages = 62
 
             # scrape pages
@@ -207,17 +208,16 @@ class Scrapper:
 
         return items
 
-    def scrape_academy(self):
+    def scrape_nordstromrack(self):
         """
-        Scrapper for domain_name = "https://www.academy.com/"
+        Scrapper for domain_name = "https://www.nordstromrack.com/"
         Args:
             _
         Return:
             items (list): list of scrapped items.
         """
-        domain_name = "https://www.academy.com/"
-        base_url = "https://www.academy.com/c/shops/sale"  # may contain out of stock
-        # base_url = "https://www.academy.com/c/shops/sale?&facet=%27facet_InvInStock%27:%27Y%27" # in stock only ## dynamic: won't work
+        domain_name = "https://www.nordstromrack.com/"
+        base_url = "https://www.nordstromrack.com/clearance"
         items = []
 
         try:
@@ -228,30 +228,41 @@ class Scrapper:
 
             # get num_of_pages
             try:
-                raw_pages_data = soup.find_all(class_="numberRangePagination_navToPage")
-                no_of_pages = int(raw_pages_data[-1].text)
+                num_of_items = int(soup.find(class_="jHG4O").text.strip(" items"))
+                item_per_page = 72
+                no_of_pages = round(num_of_items / item_per_page)
+                no_of_pages
             except Exception as e:
-                print("Error getting pages", e.args)
-                no_of_pages = 48
+                print("Error getting pages", e)
+                no_of_pages = 140 # ~
 
             # scrape pages
             for page_no in range(1, no_of_pages + 1):
-                page_url = base_url + f"&page_{page_no}"
+                page_url = (
+                    base_url
+                    + f"?page={page_no}"
+                )
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
                 soup = BeautifulSoup(res.content, "lxml")
 
-                products = soup.find_all(class_="css-18cbcd1")
+                products = soup.find_all(
+                    class_="similar-products__item col-xs-12 col-sm-6 col-md-4 slp-eq-height"
+                )
                 for product in products:
-                    product_data = product.find(class_="product-card-simple-title")
-                    item_title = product_data.get("aria-label")
-                    item_url = product_data.get("href")
+                    product_data = product.find(
+                        class_="row-eq-height ea-product-cell-name"
+                    )
+                    # item_title
+                    item_title = product_data.a.string
+                    # item_url
+                    item_url = product_data.a.get("href")
                     # item_price
                     try:
                         # try to get after price - if exists
                         item_price = extract_price(
-                            product.find(class_="ea-product-cell-price text-red").string
+                            product.find(class_="ea-product-cell-price").string
                         )
                     except AttributeError:  # only old price
                         item_price = extract_price(
