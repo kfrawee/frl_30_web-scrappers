@@ -5,6 +5,10 @@ Each website has a different scrapping function.
 # List of urls:
 # https://plaidonline.com/products?closeout=True # done
 # https://www.enasco.com/c/Clearance # done
+# https://www.nordstromrack.com/clearance # done
+# https://www.altomusic.com/by-category/hot-deals/on-sale # done
+# https://www.muscleandstrength.com/store/category/clearance.html # done
+# https://www.scheels.com/c/all/sale # wip
 # https://www.gamenerdz.com/sale-clearance # TODO check! dynamic website - JS to load content
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # TODO check! blocked by robots.txt, <Response [403]>
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # TODO check! blocked by robots.txt and dynamic website - JS to load content
@@ -12,12 +16,8 @@ Each website has a different scrapping function.
 # https://www.academy.com/c/shops/sale # TODO check! prices are not consistent
 # https://www.officesupply.com/clearance # TODO check! blocked by robots.txt, <Response [403]>
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # TODO check! dynamic website - JS to load content 
-# https://www.nordstromrack.com/clearance # done
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  TODO check! dynamic website - JS to load content
 # https://www.gamestop.com/deals # TODO check! dynamic website - JS to load content
-# https://www.altomusic.com/by-category/hot-deals/on-sale # done
-# https://www.muscleandstrength.com/store/category/clearance.html # done
-# https://www.scheels.com/c/all/sale # wip
 """
 from http import HTTPStatus
 from time import sleep
