@@ -51,7 +51,10 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
 
     ### 5th website:
-    scraped_items.extend(scrappers.scrape_muscleandstrength())
+    # scraped_items.extend(scrappers.scrape_muscleandstrength()) # ~ 20 sec
+
+    ### 6th website:
+    scraped_items.extend(scrappers.scrape_camerareadycosmetics())  # ~ 20 sec
 
     ### check/updated items
     new_items_count = 0
