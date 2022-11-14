@@ -5,18 +5,18 @@ Each website has a different scrapping function.
 # List of urls:
 # https://plaidonline.com/products?closeout=True # done
 # https://www.enasco.com/c/Clearance # done
-# https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
-# https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
-# https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # blocked by robots.txt and dynamic website - JS to load content
-# https://camerareadycosmetics.com/collections/makeup-sale # blocked by robots.txt
+# https://www.gamenerdz.com/sale-clearance # TODO check! dynamic website - JS to load content
+# https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # TODO check! blocked by robots.txt, <Response [403]>
+# https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # TODO check! blocked by robots.txt and dynamic website - JS to load content
+# https://camerareadycosmetics.com/collections/makeup-sale # TODO check! blocked by robots.txt
 # https://www.academy.com/c/shops/sale # TODO check! prices are not consistent
-# https://www.officesupply.com/clearance # blocked by robots.txt, <Response [403]>
+# https://www.officesupply.com/clearance # TODO check! blocked by robots.txt, <Response [403]>
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # TODO check! dynamic website - JS to load content 
 # https://www.nordstromrack.com/clearance # done
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  TODO check! dynamic website - JS to load content
 # https://www.gamestop.com/deals # TODO check! dynamic website - JS to load content
-# https://www.altomusic.com/by-category/hot-deals/on-sale # wip
-# https://www.muscleandstrength.com/store/category/clearance.html
+# https://www.altomusic.com/by-category/hot-deals/on-sale # done
+# https://www.muscleandstrength.com/store/category/clearance.html # done
 # https://www.scheels.com/c/all/sale
 """
 from http import HTTPStatus
@@ -210,6 +210,7 @@ class Scrapper:
     def scrape_nordstromrack(self):
         """
         Scrapper for domain_name = "https://www.nordstromrack.com/"
+        
         Args:
             _
         Return:
@@ -294,6 +295,7 @@ class Scrapper:
     def scrape_altomusic(self):
         """
         Scrapper for domain_name = "https://www.altomusic.com/"
+        
         Args:
             _
         Return:
@@ -351,6 +353,87 @@ class Scrapper:
                             "item_title": item_title,
                             "item_price": item_price,
                             "item_url": item_url if item_url else domain_name,
+                        }
+                    )
+
+                sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = f"Error while trying to scrape {get_domain_name(base_url)}: '{e}'. Traceback: {traceback.format_exc()}."
+            self.telegram_bot.send_error(error_message)
+
+        return self.items
+
+    def scrape_muscleandstrength(self):
+        """
+        Scrapper for domain_name = "https://www.muscleandstrength.com/"
+
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
+        domain_name = "https://www.muscleandstrength.com/"
+        base_url = "https://www.muscleandstrength.com/store/category/clearance.html"
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            try:
+                displayed_items = int(
+                    soup.find(class_="search-result-displayed-count").string
+                )  # useless
+                available_items = int(
+                    soup.find(class_="search-result-available-count").string
+                )
+                item_added_per_page = 20  # tested
+                no_of_pages = round(available_items / item_added_per_page)
+                no_of_pages
+            except Exception as e:
+                print("Error getting pages", e)
+                no_of_pages = 9  # ~
+
+            # scrape pages
+            for page_no in range(1, no_of_pages + 1):
+                page_url = base_url + f"?p={page_no}"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
+
+                products = soup.find_all(
+                    class_="cell small-12 bp600-6 bp960-4 large-3 grid-product"
+                )
+
+                for product in products:
+                    product_data = product.find(class_="product-name")
+                    # item_title
+                    item_title = product_data.string.strip()
+                    # # item_url
+                    item_url = product_data.get("href")
+                    # item_price
+                    try:
+                        item_price = extract_price(product.find(class_="price").string)
+                    except Exception:
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    self.items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": domain_name.strip("/") + item_url
+                            if item_url
+                            else domain_name,
                         }
                     )
 

@@ -3,19 +3,18 @@ Helper functions.
 """
 
 import os
+from typing import List
 from pathlib import Path
 import re
 from datetime import datetime, timezone
-from typing import List
+
 import pandas as pd
 
 
 from telegram_bot_utils import TelegramBot
-from constants import DATA_DIR, DATA_FILE_NAME
+from constants import DATA_DIR, DATA_FILE_NAME, DATA_COLUMNS
 
 telegram_bot = TelegramBot()
-
-DATA_COLUMNS = ["item_title", "item_price", "item_url", "added_on", "updated_on"]
 
 
 def load_data(

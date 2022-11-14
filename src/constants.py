@@ -13,3 +13,4 @@ CHAT_ID = -845543341
 DATA_DIR = "data"
 DATA_FILE_NAME = "data.csv"
 PAGES_SLEEP_INTERVAL = 1
+DATA_COLUMNS = ["item_title", "item_price", "item_url", "added_on", "updated_on"]

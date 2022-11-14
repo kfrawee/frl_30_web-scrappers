@@ -11,9 +11,9 @@ from helpers import (
     updated_datetime,
     update_item_price,
     get_elapsed_time,
-    DATA_COLUMNS,
 )
 
+from constants import DATA_COLUMNS
 from scrappers import Scrapper
 from telegram_bot_utils import TelegramBot
 
@@ -48,7 +48,10 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_nordstromrack())  # ~522.68 sec
 
     ### 4th website:
-    scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
+    # scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
+
+    ### 5th website:
+    scraped_items.extend(scrappers.scrape_muscleandstrength())
 
     ### check/updated items
     new_items_count = 0
