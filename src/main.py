@@ -36,7 +36,7 @@ if __name__ == "__main__":
     telegram_bot.send_alert(f"Start scraping...")
 
     ### SCRAPPERS
-    # comment lines to skip a website or to update items from a certain website
+    # comment a line to enable/disable/update a certain website
     scrappers = Scrapper()
     ### 1st website:
     # scraped_items.extend(scrappers.scrape_plaidonline()) # ~17 sec
