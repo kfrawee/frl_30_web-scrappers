@@ -557,3 +557,86 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return self.items
+
+    def scrape_officesupply(self):
+        """
+        Scrapper for domain_name = "https://www.officesupply.com/"
+
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
+        domain_name = "https://www.officesupply.com/"
+        base_url = "https://www.officesupply.com/clearance"
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            # try:
+            #     raw_pages_data = soup.find_all(class_="page")
+            #     no_of_pages = int(raw_pages_data[-1].a.string)
+            # except Exception as e:
+            #     print("Error getting pages", e)
+            no_of_pages = 1  # ~
+
+            # scrape pages
+            for page_no in range(1, no_of_pages + 1):
+                page_url = base_url + f"?page={page_no}"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
+
+                products = soup.find_all(attrs={"class": "grid-item"})
+
+                for product in products:
+                    product_data = product.find(class_="grid-product__title")
+                    # item_title
+                    item_title = product_data.a.string.strip()
+                    # # item_url
+                    item_url = product_data.a.get("href")
+                    # item_price
+                    try:
+
+                        item_price = extract_price(
+                            product.find(
+                                attrs={"class": "grid-product__price--current"}
+                            )
+                            .find("span", class_="money")
+                            .string
+                        )
+                    except Exception:
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    self.items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": domain_name.strip("/") + item_url
+                            if item_url
+                            else domain_name,
+                        }
+                    )
+
+                sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = (
+                f"""Error while trying to scrape {get_domain_name(base_url)}: '{e}'. \n"""
+                f"""StatusCode: {res.status_code}. \n"""
+                f"""Traceback: {traceback.format_exc()}."""
+            )
+            self.telegram_bot.send_error(error_message)
+
+        return self.items
