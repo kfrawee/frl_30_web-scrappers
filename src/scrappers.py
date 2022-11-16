@@ -9,16 +9,16 @@ Each website has a different scrapping function.
 # https://www.altomusic.com/by-category/hot-deals/on-sale # done
 # https://www.muscleandstrength.com/store/category/clearance.html # done
 # https://camerareadycosmetics.com/collections/makeup-sale # done 
+# https://www.officesupply.com/clearance # done
 
-# https://www.scheels.com/c/all/sale # wip ~ 600 page
+# https://www.scheels.com/c/all/sale # wip
 
-# CHECKED - NOT WORKING
+# CHECKED - NOT WORKING ¯\_(ツ)_/¯
 # https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # dynamic website - JS to load content
 
 # TODO RE-CHECK
-# https://www.officesupply.com/clearance # blocked by robots.txt, <Response [403]>
 # https://www.academy.com/c/shops/sale #  prices are not consistent
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # dynamic website - JS to load content 
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  dynamic website - JS to load content
@@ -582,35 +582,33 @@ class Scrapper:
             #     no_of_pages = int(raw_pages_data[-1].a.string)
             # except Exception as e:
             #     print("Error getting pages", e)
-            no_of_pages = 1  # ~
+            no_of_pages = 1
 
             # scrape pages
             for page_no in range(1, no_of_pages + 1):
-                page_url = base_url + f"?page={page_no}"
-                res = requests.request("GET", url=page_url, headers=self.headers)
-                assert res.status_code == HTTPStatus.OK
+                # page_url = base_url + f"?page={page_no}"
+                # res = requests.request("GET", url=page_url, headers=self.headers)
+                # assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                # soup = BeautifulSoup(res.content, "lxml")
 
-                products = soup.find_all(attrs={"class": "grid-item"})
+                products = soup.find_all(class_="product-details")
 
                 for product in products:
-                    product_data = product.find(class_="grid-product__title")
+                    product_data = product.find(class_="title")
                     # item_title
-                    item_title = product_data.a.string.strip()
+                    item_title = product_data.span.string
                     # # item_url
                     item_url = product_data.a.get("href")
                     # item_price
                     try:
-
                         item_price = extract_price(
-                            product.find(
-                                attrs={"class": "grid-product__price--current"}
-                            )
-                            .find("span", class_="money")
-                            .string
+                            product.parent.find(class_="price")
+                            .find("span")
+                            .string.strip()
                         )
-                    except Exception:
+                    except Exception as e:
+                        traceback.format_exc()
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
@@ -624,7 +622,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                # sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
