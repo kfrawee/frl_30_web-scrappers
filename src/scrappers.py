@@ -730,3 +730,92 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return self.items
+
+    def scrape_scheels(self):
+        """
+        Scrapper for: "https://www.scheels.com/"
+
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
+        domain_name = "https://www.scheels.com/"
+        base_url = "https://www.scheels.com/c/all/sale"
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            try:
+                # raw_pages_data = soup.find_all(class_="pagination-numbering")
+                # no_of_pages = int(raw_pages_data[-1].a.string)
+
+                products_count = soup.find("span", class_="pageResults")
+                products_count = int(
+                    extract_price(products_count.string.replace(",", ""))
+                )
+            except Exception as e:
+                print("Error getting pages", e)
+                products_count = 12412 # ~
+
+            # scrape pages
+            # item_per_page: increase by multiples of 24 - 1 (one ad) to increase speed.
+            # NOTE the request will take more time.
+            item_per_page = 47 # Optimum number of items per page
+            for product_idx in range(0, products_count + 1, item_per_page): # TODO: CHECK if product_idx
+                # if product_idx % item_per_page == 0:
+                #     print(product_idx)  # DEBUG: check if the script is stuck
+                page_url = base_url + f"?start={product_idx}&sz={item_per_page}"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
+
+                products_raw = soup.find(class_="product-grid-wrapper")
+                products = products_raw.find_all(class_="product grid-tile")
+
+                for product in products:
+                    product_data = product.find(class_="tile-body")
+                    # item_title
+                    item_title = product_data.find(class_="link-name").p.string
+                    # # item_url
+                    item_url = product_data.find(class_="link-name").get("href")
+                    # item_price
+                    try:
+                        item_price = extract_price(
+                            product.find(class_="actual-price").string.strip()
+                        )
+                    except Exception as e:
+                        traceback.format_exc()
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    self.items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": domain_name.strip("/") + item_url
+                            if item_url
+                            else domain_name,
+                        }
+                    )
+                sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = (
+                f"""Error while trying to scrape {get_domain_name(base_url)}: '{e}'. \n"""
+                f"""StatusCode: {res.status_code}. \n"""
+                f"""Traceback: {traceback.format_exc()}."""
+            )
+            self.telegram_bot.send_error(error_message)
+
+        return self.items
