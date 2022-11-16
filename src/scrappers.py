@@ -3,26 +3,29 @@ Scrappers functions.
 Each website has a different scrapping function.
 
 # List of urls:
-# https://plaidonline.com/products?closeout=True # done
-# https://www.enasco.com/c/Clearance # done
-# https://www.nordstromrack.com/clearance # done
-# https://www.altomusic.com/by-category/hot-deals/on-sale # done
-# https://www.muscleandstrength.com/store/category/clearance.html # done
-# https://camerareadycosmetics.com/collections/makeup-sale # done 
-# https://www.officesupply.com/clearance # done
+# COMPLETED
+# https://plaidonline.com/products?closeout=True
+# https://www.enasco.com/c/Clearance
+# https://www.nordstromrack.com/clearance
+# https://www.altomusic.com/by-category/hot-deals/on-sale
+# https://www.muscleandstrength.com/store/category/clearance.html
+# https://camerareadycosmetics.com/collections/makeup-sale 
+# https://www.officesupply.com/clearance
+# https://www.gamestop.com/deals
 
-# https://www.scheels.com/c/all/sale # wip
 
 # CHECKED - NOT WORKING ¯\_(ツ)_/¯
 # https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # dynamic website - JS to load content
-
-# TODO RE-CHECK
-# https://www.academy.com/c/shops/sale #  prices are not consistent
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # dynamic website - JS to load content 
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  dynamic website - JS to load content
-# https://www.gamestop.com/deals # dynamic website - JS to load content
+
+# TODO RE-CHECK
+# WIP
+# https://www.scheels.com/c/all/sale 
+# https://www.academy.com/c/shops/sale 
+
 """
 from http import HTTPStatus
 from time import sleep
@@ -47,7 +50,7 @@ class Scrapper:
 
     def scrape_plaidonline(self):
         """
-        Scrapper for domain_name = "https://plaidonline.com/"
+        Scrapper for: "https://plaidonline.com/"
 
         Args:
             _
@@ -133,7 +136,7 @@ class Scrapper:
 
     def scrape_enasco(self):
         """
-        Scrapper for domain_name = "https://www.enasco.com/"
+        Scrapper for: "https://www.enasco.com/"
         Args:
             _
         Return:
@@ -222,7 +225,7 @@ class Scrapper:
 
     def scrape_nordstromrack(self):
         """
-        Scrapper for domain_name = "https://www.nordstromrack.com/"
+        Scrapper for: "https://www.nordstromrack.com/"
         
         Args:
             _
@@ -311,7 +314,7 @@ class Scrapper:
 
     def scrape_altomusic(self):
         """
-        Scrapper for domain_name = "https://www.altomusic.com/"
+        Scrapper for: "https://www.altomusic.com/"
         
         Args:
             _
@@ -392,7 +395,7 @@ class Scrapper:
 
     def scrape_muscleandstrength(self):
         """
-        Scrapper for domain_name = "https://www.muscleandstrength.com/"
+        Scrapper for: "https://www.muscleandstrength.com/"
 
         Args:
             _
@@ -477,7 +480,7 @@ class Scrapper:
 
     def scrape_camerareadycosmetics(self):
         """
-        Scrapper for domain_name = "https://camerareadycosmetics.com/"
+        Scrapper for: "https://camerareadycosmetics.com/"
 
         Args:
             _
@@ -560,7 +563,7 @@ class Scrapper:
 
     def scrape_officesupply(self):
         """
-        Scrapper for domain_name = "https://www.officesupply.com/"
+        Scrapper for: "https://www.officesupply.com/"
 
         Args:
             _
@@ -591,6 +594,90 @@ class Scrapper:
                 # assert res.status_code == HTTPStatus.OK
 
                 # soup = BeautifulSoup(res.content, "lxml")
+
+                products = soup.find_all(class_="product-details")
+
+                for product in products:
+                    product_data = product.find(class_="title")
+                    # item_title
+                    item_title = product_data.span.string
+                    # # item_url
+                    item_url = product_data.a.get("href")
+                    # item_price
+                    try:
+                        item_price = extract_price(
+                            product.parent.find(class_="price")
+                            .find("span")
+                            .string.strip()
+                        )
+                    except Exception as e:
+                        traceback.format_exc()
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    self.items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": domain_name.strip("/") + item_url
+                            if item_url
+                            else domain_name,
+                        }
+                    )
+
+                # sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = (
+                f"""Error while trying to scrape {get_domain_name(base_url)}: '{e}'. \n"""
+                f"""StatusCode: {res.status_code}. \n"""
+                f"""Traceback: {traceback.format_exc()}."""
+            )
+            self.telegram_bot.send_error(error_message)
+
+        return self.items
+    def scrape_gamestop(self):
+        """
+        Scrapper for: "https://www.gamestop.com/"
+
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
+        domain_name = "https://www.gamestop.com/"
+        base_url = "https://www.gamestop.com/deals"
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            try:
+                raw_pages_data = soup.find_all(class_="pagination-numbering")
+                no_of_pages = int(raw_pages_data[-1].a.string)
+
+                products_count = soup.find("span", class_="pageResults")
+                products_count = int(extract_price(products_count.string.replace(",", "")))
+            except Exception as e:
+                print("Error getting pages", e)
+                no_of_pages = 500 # ~
+                products_count = 12412
+
+            # scrape pages
+            for product_idx in range(0, products_count + 1 , 24):
+                page_url = base_url + f"?start={product_idx}&sz=24"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
 
                 products = soup.find_all(class_="product-details")
 
