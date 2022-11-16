@@ -12,6 +12,7 @@ Each website has a different scrapping function.
 # https://camerareadycosmetics.com/collections/makeup-sale 
 # https://www.officesupply.com/clearance
 # https://www.gamestop.com/deals
+# https://www.scheels.com/c/all/sale # WIP
 
 
 # CHECKED - NOT WORKING ¯\_(ツ)_/¯
@@ -23,7 +24,6 @@ Each website has a different scrapping function.
 
 # TODO RE-CHECK
 # WIP
-# https://www.scheels.com/c/all/sale 
 # https://www.academy.com/c/shops/sale 
 
 """
@@ -226,7 +226,7 @@ class Scrapper:
     def scrape_nordstromrack(self):
         """
         Scrapper for: "https://www.nordstromrack.com/"
-        
+
         Args:
             _
         Return:
@@ -315,7 +315,7 @@ class Scrapper:
     def scrape_altomusic(self):
         """
         Scrapper for: "https://www.altomusic.com/"
-        
+
         Args:
             _
         Return:
@@ -671,12 +671,16 @@ class Scrapper:
                 )
             except Exception as e:
                 print("Error getting pages", e)
-                # no_of_pages = 500  # ~
-                products_count = 12412
+                products_count = 12412 # ~
 
             # scrape pages
-            for product_idx in range(0, products_count + 1, 24):
-                page_url = base_url + f"?start={product_idx}&sz=24"
+            # item_per_page: increase by multiples of 24 to increase speed.
+            # NOTE the request will take more time.
+            item_per_page = 24 * 4
+            for product_idx in range(0, products_count + 1, item_per_page):
+                # if product_idx % item_per_page == 0:
+                #     print(product_idx)  # DEBUG: check if the script is stuck
+                page_url = base_url + f"?start={product_idx}&sz={item_per_page}"
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
@@ -693,7 +697,9 @@ class Scrapper:
                     item_url = product_data.find(class_="link-name").get("href")
                     # item_price
                     try:
-                        item_price = extract_price(product.find(class_="actual-price").string.strip())
+                        item_price = extract_price(
+                            product.find(class_="actual-price").string.strip()
+                        )
                     except Exception as e:
                         traceback.format_exc()
                         item_price = 0.0  # no price available

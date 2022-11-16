@@ -13,8 +13,8 @@ from helpers import (
     get_elapsed_time,
 )
 
-from constants import DATA_COLUMNS
 from scrappers import Scrapper
+from constants import DATA_COLUMNS
 from telegram_bot_utils import TelegramBot
 
 telegram_bot = TelegramBot()
@@ -60,8 +60,10 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_officesupply()) # ~ 4 sec
 
     ### 8th website:
-    scraped_items.extend(scrappers.scrape_gamestop()) # ~ 600 sec
+    # scraped_items.extend(scrappers.scrape_gamestop())  # ~ 1800 sec
 
+    ### 9th website:
+    
     ### check/updated items
     new_items_count = 0
     updated_items_count = 0
