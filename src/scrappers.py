@@ -15,8 +15,8 @@ Each website has a different scrapping function.
 
 
 # CHECKED - NOT WORKING ¯\_(ツ)_/¯
-# https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
 # https://chesapeake.yankeecandle.com/chesapeake-bay-candle/sale/ # blocked by robots.txt, <Response [403]>
+# https://www.gamenerdz.com/sale-clearance # dynamic website - JS to load content
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # dynamic website - JS to load content
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # dynamic website - JS to load content 
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  dynamic website - JS to load content
@@ -662,8 +662,8 @@ class Scrapper:
 
             # get num_of_pages
             try:
-                raw_pages_data = soup.find_all(class_="pagination-numbering")
-                no_of_pages = int(raw_pages_data[-1].a.string)
+                # raw_pages_data = soup.find_all(class_="pagination-numbering")
+                # no_of_pages = int(raw_pages_data[-1].a.string)
 
                 products_count = soup.find("span", class_="pageResults")
                 products_count = int(
@@ -671,7 +671,7 @@ class Scrapper:
                 )
             except Exception as e:
                 print("Error getting pages", e)
-                no_of_pages = 500  # ~
+                # no_of_pages = 500  # ~
                 products_count = 12412
 
             # scrape pages
@@ -682,21 +682,18 @@ class Scrapper:
 
                 soup = BeautifulSoup(res.content, "lxml")
 
-                products = soup.find_all(class_="product-details")
+                products_raw = soup.find(class_="product-grid-wrapper")
+                products = products_raw.find_all(class_="product grid-tile")
 
                 for product in products:
-                    product_data = product.find(class_="title")
+                    product_data = product.find(class_="tile-body")
                     # item_title
-                    item_title = product_data.span.string
+                    item_title = product_data.find(class_="link-name").p.string
                     # # item_url
-                    item_url = product_data.a.get("href")
+                    item_url = product_data.find(class_="link-name").get("href")
                     # item_price
                     try:
-                        item_price = extract_price(
-                            product.parent.find(class_="price")
-                            .find("span")
-                            .string.strip()
-                        )
+                        item_price = extract_price(product.find(class_="actual-price").string.strip())
                     except Exception as e:
                         traceback.format_exc()
                         item_price = 0.0  # no price available
@@ -711,8 +708,7 @@ class Scrapper:
                             else domain_name,
                         }
                     )
-
-                # sleep(PAGES_SLEEP_INTERVAL)
+                sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,

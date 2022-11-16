@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_officesupply()) # ~ 4 sec
 
     ### 8th website:
-    scraped_items.extend(scrappers.scrape_gamestop())
+    scraped_items.extend(scrappers.scrape_gamestop()) # ~ 600 sec
 
     ### check/updated items
     new_items_count = 0
