@@ -641,6 +641,7 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return self.items
+
     def scrape_gamestop(self):
         """
         Scrapper for: "https://www.gamestop.com/"
@@ -665,14 +666,16 @@ class Scrapper:
                 no_of_pages = int(raw_pages_data[-1].a.string)
 
                 products_count = soup.find("span", class_="pageResults")
-                products_count = int(extract_price(products_count.string.replace(",", "")))
+                products_count = int(
+                    extract_price(products_count.string.replace(",", ""))
+                )
             except Exception as e:
                 print("Error getting pages", e)
-                no_of_pages = 500 # ~
+                no_of_pages = 500  # ~
                 products_count = 12412
 
             # scrape pages
-            for product_idx in range(0, products_count + 1 , 24):
+            for product_idx in range(0, products_count + 1, 24):
                 page_url = base_url + f"?start={product_idx}&sz=24"
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
