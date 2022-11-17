@@ -26,6 +26,8 @@ Each website has a different scrapping function.
 # WIP
 # https://www.academy.com/c/shops/sale 
 
+ f'https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
+
 """
 from http import HTTPStatus
 from time import sleep
@@ -677,7 +679,11 @@ class Scrapper:
             # item_per_page: increase by multiples of 24 to increase speed.
             # NOTE the request will take more time.
             item_per_page = 24 * 4
+            # i = 0 # DEBUG
             for product_idx in range(0, products_count + 1, item_per_page):
+                # if i > 2:
+                #     break # DEBUG: 3 iterations
+                # i += 1
                 # if product_idx % item_per_page == 0:
                 #     print(product_idx)  # DEBUG: check if the script is stuck
                 page_url = base_url + f"?start={product_idx}&sz={item_per_page}"
@@ -760,9 +766,13 @@ class Scrapper:
             # item_per_page: increase by multiples of 24 - 1 (one ad) to increase speed.
             # NOTE the request will take more time.
             item_per_page = 47  # Optimum number of items per page
+            # i = 0 # DEBUG
             for product_idx in range(0, item_per_page * no_of_pages, item_per_page):
-                if product_idx * 10 % item_per_page == 0:
-                    print(product_idx)  # DEBUG: check if the script is stuck
+                # if i > 2:
+                #     break # DEBUG: 3 iterations
+                # i += 1
+                # if product_idx % item_per_page == 0:
+                #   print(product_idx)  # DEBUG: check if the script is stuck
                 page_url = base_url + f"?start={product_idx}&sz={item_per_page}"
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
