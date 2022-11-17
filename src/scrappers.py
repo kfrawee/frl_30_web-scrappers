@@ -14,6 +14,7 @@ Each website has a different scrapping function.
 # https://www.gamestop.com/deals
 # https://www.scheels.com/c/all/sale
 # https://www.academy.com/c/shops/sale 
+# https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
 
 
 # CHECKED - NOT WORKING ¯\_(ツ)_/¯
@@ -22,11 +23,9 @@ Each website has a different scrapping function.
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # dynamic website - JS to load content
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # dynamic website - JS to load content 
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  dynamic website - JS to load content
-# https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
 
 # TODO RE-CHECK
 # WIP
-
 
 """
 from http import HTTPStatus
