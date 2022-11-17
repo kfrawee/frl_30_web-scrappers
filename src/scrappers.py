@@ -823,3 +823,88 @@ class Scrapper:
             self.telegram_bot.send_error(error_message)
 
         return self.items
+
+    def scrape_academy(self):
+        """
+            Scrapper for: "https://www.academy.com/"
+
+            Args:
+                _
+            Return:
+                items (list): list of scrapped items.
+            """
+        domain_name = "https://www.academy.com/"
+        base_url = "https://www.academy.com/c/shops/sale"
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            try:
+                no_of_pages_raw = soup.find(
+                    attrs={"data-auid": "NumberRangeNavigation"}
+                ).find_all("a")
+                no_of_pages = int(extract_price(no_of_pages_raw[-1].text))
+
+            except Exception as e:
+                print("Error getting pages", e)
+                no_of_pages = 52  # ~
+
+            # scrape pages
+            for page_no in range(1, no_of_pages):  # no_of_pages -1
+                page_url = base_url + f"?&page_{page_no}"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
+
+                products = soup.find_all(class_="css-18cbcd1")
+
+                for product in products:
+                    product_data = product.find(
+                        class_="product-card-simple-title css-dfh7vc"
+                    )
+                    # item_title
+                    item_title = product_data.string.strip()
+                    # # item_url
+                    item_url = product_data.get("href")
+                    # item_price
+                    try:
+                        price_data = product.find(class_="product-price").find("span")
+                        # combine price with decimal
+                        init_price = price_data.find("span").string
+                        dec_price = price_data.find_all("sup")[-1]
+                        if dec_price and int(dec_price.string):
+                            init_price += f".{dec_price.string}"
+                        item_price = extract_price(init_price)
+                    except Exception:
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    self.items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": item_url if item_url else domain_name,
+                        }
+                    )
+
+                sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = (
+                f"""Error while trying to scrape {get_domain_name(base_url)}: '{e}'. \n"""
+                f"""StatusCode: {res.status_code}. \n"""
+                f"""Traceback: {traceback.format_exc()}."""
+            )
+            self.telegram_bot.send_error(error_message)
+
+        return self.items
