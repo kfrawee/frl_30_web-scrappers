@@ -66,7 +66,10 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_scheels())  # ~ 1800 sec
 
     ### 10th website:
-    scraped_items.extend(scrappers.scrape_academy())  # ~ 90 sec
+    # scraped_items.extend(scrappers.scrape_academy())  # ~ 90 sec
+
+    ### 11th website:
+    scraped_items.extend(scrappers.scrape_4sgm())  # ~ 90 sec
 
     ### check/updated items
     new_items_count = 0

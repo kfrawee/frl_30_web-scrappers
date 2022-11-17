@@ -22,11 +22,11 @@ Each website has a different scrapping function.
 # https://www.dickblick.com/products/wacky-links-sets/?fromSearch=%2Fclearance%2F # dynamic website - JS to load content
 # https://entirelypetspharmacy.com/s.html?tag=sale-specials # dynamic website - JS to load content 
 # https://www.shopatdean.com/collections/clearance-closeouts-overstock #  dynamic website - JS to load content
+# https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
 
 # TODO RE-CHECK
 # WIP
 
-https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
 
 """
 from http import HTTPStatus
@@ -880,6 +880,92 @@ class Scrapper:
                         if dec_price and int(dec_price.string):
                             init_price += f".{dec_price.string}"
                         item_price = extract_price(init_price)
+                    except Exception:
+                        item_price = 0.0  # no price available
+
+                    # append item data to the dictionary
+                    self.items.append(
+                        {
+                            "item_title": item_title,
+                            "item_price": item_price,
+                            "item_url": domain_name.strip("/") + item_url
+                            if item_url
+                            else domain_name,
+                        }
+                    )
+
+                sleep(PAGES_SLEEP_INTERVAL)
+
+        except (
+            AssertionError,
+            requests.exceptions.HTTPError,
+            requests.exceptions.ConnectionError,
+            Exception,  # un-captured exception
+        ) as e:
+            error_message = (
+                f"""Error while trying to scrape {get_domain_name(base_url)}: '{e}'. \n"""
+                f"""StatusCode: {res.status_code}. \n"""
+                f"""Traceback: {traceback.format_exc()}."""
+            )
+            self.telegram_bot.send_error(error_message)
+
+        return self.items
+
+    def scrape_4sgm(self):
+        """
+            Scrapper for: "https://www.4sgm.com/"
+
+            Args:
+                _
+            Return:
+                items (list): list of scrapped items.
+            """
+        domain_name = "https://www.4sgm.com/"
+        base_url = (
+            "https://www.4sgm.com/category/536/Top-Deals.html"
+            "?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100"
+        )
+
+        try:
+            res = requests.request("GET", url=base_url, headers=self.headers)
+            assert res.status_code == HTTPStatus.OK
+
+            soup = BeautifulSoup(res.content, "lxml")
+
+            # get num_of_pages
+            try:
+                no_of_pages_raw = (
+                    soup.find(class_="pageNumber")
+                    .find_all(attrs={"class": "control-label"})[-1]
+                    .string
+                )
+                no_of_pages = int(extract_price(no_of_pages_raw))
+                no_of_pages
+
+            except Exception as e:
+                print("Error getting pages", e)
+                no_of_pages = 53  # ~
+
+            # scrape pages
+            for page_no in range(1, no_of_pages + 1):  # no_of_pages -1
+                page_url = base_url + f"&page={page_no}"
+                res = requests.request("GET", url=page_url, headers=self.headers)
+                assert res.status_code == HTTPStatus.OK
+
+                soup = BeautifulSoup(res.content, "lxml")
+
+                products = soup.find_all(class_="product_item_sm")
+
+                for product in products:
+                    product_data = product.find(class_="product_name")
+                    # item_title
+                    item_title = product_data.string.strip()
+                    # item_url
+                    item_url = product_data.a.get("href")
+                    # item_price
+                    try:
+                        price_data = product.find(class_="price")
+                        item_price = extract_price(price_data.string)
                     except Exception:
                         item_price = 0.0  # no price available
 
