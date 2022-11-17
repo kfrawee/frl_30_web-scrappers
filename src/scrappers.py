@@ -12,7 +12,7 @@ Each website has a different scrapping function.
 # https://camerareadycosmetics.com/collections/makeup-sale 
 # https://www.officesupply.com/clearance
 # https://www.gamestop.com/deals
-# https://www.scheels.com/c/all/sale # WIP
+# https://www.scheels.com/c/all/sale
 
 
 # CHECKED - NOT WORKING ¯\_(ツ)_/¯
@@ -667,11 +667,11 @@ class Scrapper:
 
                 products_count = soup.find("span", class_="pageResults")
                 products_count = int(
-                    extract_price(products_count.string.replace(",", ""))
+                    extract_price(products_count.string, thousands_comma_separator=True)
                 )
             except Exception as e:
                 print("Error getting pages", e)
-                products_count = 12412 # ~
+                products_count = 12412  # ~
 
             # scrape pages
             # item_per_page: increase by multiples of 24 to increase speed.
@@ -751,43 +751,37 @@ class Scrapper:
 
             # get num_of_pages
             try:
-                # raw_pages_data = soup.find_all(class_="pagination-numbering")
-                # no_of_pages = int(raw_pages_data[-1].a.string)
-
-                products_count = soup.find("span", class_="pageResults")
-                products_count = int(
-                    extract_price(products_count.string.replace(",", ""))
-                )
+                no_of_pages = int(extract_price(soup.find(class_="page-last").text))
             except Exception as e:
                 print("Error getting pages", e)
-                products_count = 12412 # ~
+                no_of_pages = 265
 
             # scrape pages
             # item_per_page: increase by multiples of 24 - 1 (one ad) to increase speed.
             # NOTE the request will take more time.
-            item_per_page = 47 # Optimum number of items per page
-            for product_idx in range(0, products_count + 1, item_per_page): # TODO: CHECK if product_idx
-                # if product_idx % item_per_page == 0:
-                #     print(product_idx)  # DEBUG: check if the script is stuck
+            item_per_page = 47  # Optimum number of items per page
+            for product_idx in range(0, item_per_page * no_of_pages, item_per_page):
+                if product_idx * 10 % item_per_page == 0:
+                    print(product_idx)  # DEBUG: check if the script is stuck
                 page_url = base_url + f"?start={product_idx}&sz={item_per_page}"
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
                 soup = BeautifulSoup(res.content, "lxml")
 
-                products_raw = soup.find(class_="product-grid-wrapper")
-                products = products_raw.find_all(class_="product grid-tile")
+                products = soup.find_all(class_="tile-inner")
 
                 for product in products:
-                    product_data = product.find(class_="tile-body")
+                    product_data = product.find(class_="name-link")
                     # item_title
-                    item_title = product_data.find(class_="link-name").p.string
-                    # # item_url
-                    item_url = product_data.find(class_="link-name").get("href")
+                    item_title = product_data.string.strip()
+                    # item_url
+                    item_url = product_data.get("href")
                     # item_price
                     try:
                         item_price = extract_price(
-                            product.find(class_="actual-price").string.strip()
+                            product.find(attrs={"itemprop": "price"}).string.strip(),
+                            thousands_comma_separator=True,
                         )
                     except Exception as e:
                         traceback.format_exc()

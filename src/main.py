@@ -63,7 +63,9 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_gamestop())  # ~ 1800 sec
 
     ### 9th website:
-    
+    scraped_items.extend(scrappers.scrape_scheels())  # ~ 1800 sec
+
+
     ### check/updated items
     new_items_count = 0
     updated_items_count = 0

@@ -111,18 +111,23 @@ def update_item_price(
     return dataframe
 
 
-def extract_price(text_price: str = None) -> float:
+def extract_price(text_price: str = None, thousands_comma_separator=False) -> float:
     """
     Using regex; extract price from a text.
 
     Args:
         text_price (str): The text that contains the price.
+        thousands_comma_separator (bool): Whether the comma in `text_price` should treated as thousand separator or as decimal. 
 
     Returns:
         extracted_price (float): The extracted price.
+
     """
     if not text_price:
         return 0
+
+    if thousands_comma_separator:
+        text_price = text_price.replace(",", "")
 
     pattern = r"(\d+(?:\.\d+)?)"
     extracted_price = re.findall(pattern, text_price.replace(",", "."))
