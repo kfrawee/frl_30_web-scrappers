@@ -13,6 +13,7 @@ Each website has a different scrapping function.
 # https://www.officesupply.com/clearance
 # https://www.gamestop.com/deals
 # https://www.scheels.com/c/all/sale
+# https://www.academy.com/c/shops/sale 
 
 
 # CHECKED - NOT WORKING ¯\_(ツ)_/¯
@@ -24,9 +25,8 @@ Each website has a different scrapping function.
 
 # TODO RE-CHECK
 # WIP
-# https://www.academy.com/c/shops/sale 
 
- f'https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
+https://www.4sgm.com/category/536/Top-Deals.html?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100&page={page}
 
 """
 from http import HTTPStatus
@@ -888,7 +888,9 @@ class Scrapper:
                         {
                             "item_title": item_title,
                             "item_price": item_price,
-                            "item_url": item_url if item_url else domain_name,
+                            "item_url": domain_name.strip("/") + item_url
+                            if item_url
+                            else domain_name,
                         }
                     )
 
