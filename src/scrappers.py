@@ -29,7 +29,7 @@ Each website has a different scrapping function.
 
 """
 from http import HTTPStatus
-from time import sleep
+import time
 import traceback
 
 from bs4 import BeautifulSoup
@@ -64,7 +64,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -124,7 +124,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
         except (
             AssertionError,
             requests.exceptions.HTTPError,
@@ -140,7 +140,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -159,7 +159,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -222,7 +222,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -239,7 +239,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -259,7 +259,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -321,7 +321,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -338,7 +338,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -358,7 +358,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -412,7 +412,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -429,7 +429,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -449,7 +449,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -507,7 +507,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -524,7 +524,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -544,7 +544,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -600,7 +600,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -617,7 +617,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -637,7 +637,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -691,7 +691,7 @@ class Scrapper:
                         }
                     )
 
-                # sleep(PAGES_SLEEP_INTERVAL)
+                # time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -708,7 +708,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -728,7 +728,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -794,7 +794,7 @@ class Scrapper:
                             else domain_name,
                         }
                     )
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -811,7 +811,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -831,7 +831,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -891,7 +891,7 @@ class Scrapper:
                             else domain_name,
                         }
                     )
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -908,7 +908,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -928,7 +928,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -988,7 +988,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -1005,7 +1005,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 
@@ -1028,7 +1028,7 @@ class Scrapper:
 
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
-        local_now = updated_datetime()
+        local_now = time.time()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -1084,7 +1084,7 @@ class Scrapper:
                         }
                     )
 
-                sleep(PAGES_SLEEP_INTERVAL)
+                time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
             AssertionError,
@@ -1101,7 +1101,7 @@ class Scrapper:
 
         # report to telegram
         self.telegram_bot.send_success(
-            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_date=local_now)} seconds."
+            f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
             f"\nCollected {len(self.items)} items.\n"
         )
 

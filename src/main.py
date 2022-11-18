@@ -40,19 +40,19 @@ if __name__ == "__main__":
     # comment a line to enable/disable/update a certain website
     scrappers = Scrapper()
     ### 1st website:
-    # scraped_items.extend(scrappers.scrape_plaidonline())  # ~17 sec
+    scraped_items.extend(scrappers.scrape_plaidonline())  # ~17 sec
 
     ### 2nd website:
-    # scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
+    scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
 
     ### 3rd website:
-    # scraped_items.extend(scrappers.scrape_nordstromrack())  # ~522.68 sec
+    scraped_items.extend(scrappers.scrape_nordstromrack())  # ~522.68 sec
 
     ### 4th website:
-    # scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
+    scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
 
     ### 5th website:
-    # scraped_items.extend(scrappers.scrape_muscleandstrength())  # ~ 20 sec
+    scraped_items.extend(scrappers.scrape_muscleandstrength())  # ~ 20 sec
 
     ### 6th website:
     scraped_items.extend(scrappers.scrape_camerareadycosmetics())  # ~ 9 sec
@@ -61,16 +61,16 @@ if __name__ == "__main__":
     scraped_items.extend(scrappers.scrape_officesupply())  # ~ 4 sec
 
     ### 8th website:
-    # scraped_items.extend(scrappers.scrape_gamestop())  # ~ 1800 sec
+    scraped_items.extend(scrappers.scrape_gamestop())  # ~ 1800 sec
 
     ### 9th website:
-    # scraped_items.extend(scrappers.scrape_scheels())  # ~ 1800 sec
+    scraped_items.extend(scrappers.scrape_scheels())  # ~ 1800 sec
 
     ### 10th website:
-    # scraped_items.extend(scrappers.scrape_academy())  # ~ 90 sec
+    scraped_items.extend(scrappers.scrape_academy())  # ~ 90 sec
 
     ### 11th website:
-    # scraped_items.extend(scrappers.scrape_4sgm())  # ~ 260 sec
+    scraped_items.extend(scrappers.scrape_4sgm())  # ~ 260 sec
 
     ### check/updated items
     new_items_count = 0
@@ -102,6 +102,6 @@ if __name__ == "__main__":
     telegram_bot.send_new_items_added(new_items_count)
     telegram_bot.send_new_items_updated(updated_items_count)
     telegram_bot.send_success(
-        f"Total elapsed time: {round(time.time() - now) } seconds."
+        f"Total elapsed time: {get_elapsed_time(start_time=now)} seconds."
         f"\nScrapped {scrappers.num_of_websites} website/s."
     )

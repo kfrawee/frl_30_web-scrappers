@@ -6,6 +6,7 @@ import os
 from typing import List
 from pathlib import Path
 import re
+import time
 from datetime import datetime, timezone
 
 import pandas as pd
@@ -161,22 +162,14 @@ def updated_datetime(now=datetime.now(tz=timezone.utc)) -> datetime:
     return now
 
 
-def get_elapsed_time(start_date: datetime) -> float:
+def get_elapsed_time(start_time: float) -> float:
     """
     Return elapsed time (seconds)
     
     Args:
-        start_date (datetime): start datetime.
+        start_time (float): start time.
 
     Returns:
         elapsed_time (float): rounded total elapsed time in seconds.
     """
-    return round(
-        (
-            datetime.strptime(
-                str(datetime.now(tz=timezone.utc))[:-6], "%Y-%m-%d %H:%M:%S.%f"
-            )
-            - datetime.strptime(str(start_date)[:-6], "%Y-%m-%d %H:%M:%S.%f")
-        ).total_seconds(),
-        2,
-    )
+    return round(time.time() - start_time, 2)
