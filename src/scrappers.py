@@ -62,7 +62,7 @@ class Scrapper:
         domain_name = "https://plaidonline.com/"
         base_url = "https://plaidonline.com/products?closeout=True"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -157,7 +157,7 @@ class Scrapper:
         domain_name = "https://www.enasco.com/"
         base_url = "https://www.enasco.com/c/Clearance"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -257,7 +257,7 @@ class Scrapper:
         domain_name = "https://www.nordstromrack.com/"
         base_url = "https://www.nordstromrack.com/clearance"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -356,7 +356,7 @@ class Scrapper:
         domain_name = "https://www.altomusic.com/"
         base_url = "https://www.altomusic.com/by-category/hot-deals/on-sale"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -447,7 +447,7 @@ class Scrapper:
         domain_name = "https://www.muscleandstrength.com/"
         base_url = "https://www.muscleandstrength.com/store/category/clearance.html"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -542,7 +542,7 @@ class Scrapper:
         domain_name = "https://camerareadycosmetics.com/"
         base_url = "https://camerareadycosmetics.com/collections/makeup-sale"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -635,7 +635,7 @@ class Scrapper:
         domain_name = "https://www.officesupply.com/"
         base_url = "https://www.officesupply.com/clearance"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -726,7 +726,7 @@ class Scrapper:
         domain_name = "https://www.gamestop.com/"
         base_url = "https://www.gamestop.com/deals"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -829,7 +829,7 @@ class Scrapper:
         domain_name = "https://www.scheels.com/"
         base_url = "https://www.scheels.com/c/all/sale"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -926,7 +926,7 @@ class Scrapper:
         domain_name = "https://www.academy.com/"
         base_url = "https://www.academy.com/c/shops/sale"
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 
@@ -1026,7 +1026,7 @@ class Scrapper:
             "?minPrice=&maxPrice=&minQty=&sort=inventory_afs&facetNameValue=Category_value_Top+Deals&size=100"
         )
 
-        self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
+        self.telegram_bot.send_alert(f"\nScrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
 

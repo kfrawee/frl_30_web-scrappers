@@ -36,15 +36,17 @@ class TelegramBot:
             None
         """
 
-        if emoji in self.emojis.keys():
-            message = f"{self.emojis.get(emoji)}  {message}"
-
         if stdout:
+            """Send before adding emoji to stdout and clean HTML tags"""
             import re
 
             pattern = re.compile(r"<.*?>")
             message_ = pattern.sub("", message)
             print(message_)
+        
+        if emoji in self.emojis.keys():
+            message = f"{self.emojis.get(emoji)}  {message}"
+
 
         try:
             self.bot_client.send_message(

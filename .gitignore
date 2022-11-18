@@ -147,3 +147,5 @@ src/data/**
 *.rar
 *.tar
 *.zip
+
+logs.txt

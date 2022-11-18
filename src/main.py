@@ -9,7 +9,6 @@ from helpers import (
     save_data,
     list_existing_items,
     get_item_price,
-    updated_datetime,
     update_item_price,
     get_elapsed_time,
 )
