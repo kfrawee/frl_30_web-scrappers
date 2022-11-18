@@ -5,6 +5,7 @@ Telegram bot Class and helpers methods.
 from telegram import Bot, ParseMode
 from telegram.error import RetryAfter, TimedOut
 
+# from helpers import remove_html_tags
 from constants import TELEGRAM_BOT_API_KEY, CHAT_ID
 
 
@@ -15,6 +16,7 @@ class TelegramBot:
         self.emojis = {
             "ALERT": "⚠️⚠️",
             "ERROR": "❌❌",
+            "SUCCESS": "✅✅",
             "ADD": "🆕✨",
             "UPDATE": "🔃✨",
             "UP": "⬆️📈",
@@ -38,14 +40,18 @@ class TelegramBot:
             message = f"{self.emojis.get(emoji)}  {message}"
 
         if stdout:
-            print(message)
+            import re
+
+            pattern = re.compile(r"<.*?>")
+            message_ = pattern.sub("", message)
+            print(message_)
 
         try:
             self.bot_client.send_message(
                 chat_id=self.chat_id, text=f"{message}", parse_mode=ParseMode.HTML
             )
-        except (RetryAfter, TimedOut) as e:
-            print(f"Error sending message, '{e.message}'.")
+        except Exception as e:
+            print(f"Error sending message, '{e.message}'. Retrying in 1 second.")
 
             # maybe timeout - try to cool down
             from time import sleep
@@ -56,10 +62,8 @@ class TelegramBot:
                     chat_id=self.chat_id, text=f"{message}", parse_mode=ParseMode.HTML
                 )
             except Exception as e:  # -_-
-                print(f"Error sending message again, '{e.message}'")
+                print(f"Error sending message again, '{e.message}'.")
 
-        except Exception as e:
-            print(f"Error sending message, '{e.message}'.")
 
     def send_new_item_added(
         self, item_title: str, item_url: str, item_price: float
@@ -94,7 +98,7 @@ class TelegramBot:
         emoji = "ADD"
         message = f"<b>Hey! New {items_count} items were added!</b>\n"
 
-        self._send_message(message=message, emoji=emoji)
+        self._send_message(message=message, emoji=emoji, stdout=True)
 
     def send_new_items_updated(self, items_count: int) -> None:
         """
@@ -108,7 +112,7 @@ class TelegramBot:
         emoji = "UPDATE"
         message = f"<b>Hey! New {items_count} items were updated!</b>\n"
 
-        self._send_message(message=message, emoji=emoji)
+        self._send_message(message=message, emoji=emoji, stdout=True)
 
     def send_price_update(
         self,
@@ -164,4 +168,16 @@ class TelegramBot:
             None
         """
         emoji = "ERROR"
+        self._send_message(message=message, emoji=emoji, stdout=True)
+
+    def send_success(self, message: str) -> None:
+        """
+        Send an success message.
+
+        Args:
+            message (str): message to send.
+        Returns:
+            None
+        """
+        emoji = "SUCCESS"
         self._send_message(message=message, emoji=emoji, stdout=True)

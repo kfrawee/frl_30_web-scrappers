@@ -1,6 +1,7 @@
 """
 Main logic
 """
+import time
 import pandas as pd
 
 from helpers import (
@@ -30,7 +31,7 @@ if __name__ == "__main__":
     telegram_bot.send_alert(f"Loaded {len(existing_items)} existing items.")
 
     updated_items_df = existing_items_df.copy()
-    now = updated_datetime()
+    now = time.time()
     scraped_items = list()
 
     telegram_bot.send_alert(f"Start scraping...")
@@ -39,7 +40,7 @@ if __name__ == "__main__":
     # comment a line to enable/disable/update a certain website
     scrappers = Scrapper()
     ### 1st website:
-    # scraped_items.extend(scrappers.scrape_plaidonline()) # ~17 sec
+    # scraped_items.extend(scrappers.scrape_plaidonline())  # ~17 sec
 
     ### 2nd website:
     # scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
@@ -51,13 +52,13 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
 
     ### 5th website:
-    # scraped_items.extend(scrappers.scrape_muscleandstrength()) # ~ 20 sec
+    # scraped_items.extend(scrappers.scrape_muscleandstrength())  # ~ 20 sec
 
     ### 6th website:
-    # scraped_items.extend(scrappers.scrape_camerareadycosmetics())  # ~ 9 sec
+    scraped_items.extend(scrappers.scrape_camerareadycosmetics())  # ~ 9 sec
 
     ### 7th website:
-    # scraped_items.extend(scrappers.scrape_officesupply()) # ~ 4 sec
+    scraped_items.extend(scrappers.scrape_officesupply())  # ~ 4 sec
 
     ### 8th website:
     # scraped_items.extend(scrappers.scrape_gamestop())  # ~ 1800 sec
@@ -69,7 +70,7 @@ if __name__ == "__main__":
     # scraped_items.extend(scrappers.scrape_academy())  # ~ 90 sec
 
     ### 11th website:
-    scraped_items.extend(scrappers.scrape_4sgm())  # ~ 260 sec
+    # scraped_items.extend(scrappers.scrape_4sgm())  # ~ 260 sec
 
     ### check/updated items
     new_items_count = 0
@@ -100,4 +101,7 @@ if __name__ == "__main__":
     # report to telegram
     telegram_bot.send_new_items_added(new_items_count)
     telegram_bot.send_new_items_updated(updated_items_count)
-    telegram_bot.send_alert(f"Finished in {get_elapsed_time(start_date=now)} seconds.")
+    telegram_bot.send_success(
+        f"Total elapsed time: {round(time.time() - now) } seconds."
+        f"\nScrapped {scrappers.num_of_websites} website/s."
+    )
