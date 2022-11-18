@@ -40,37 +40,37 @@ if __name__ == "__main__":
     # comment a line to enable/disable/update a certain website
     scrappers = Scrapper()
     ### 1st website:
-    scraped_items.extend(scrappers.scrape_plaidonline())  # ~17 sec
+    scraped_items.extend(scrappers.scrape_plaidonline())
 
     ### 2nd website:
-    scraped_items.extend(scrappers.scrape_enasco())  # ~128 sec
+    scraped_items.extend(scrappers.scrape_enasco())
 
     ### 3rd website:
-    scraped_items.extend(scrappers.scrape_nordstromrack())  # ~522.68 sec
+    scraped_items.extend(scrappers.scrape_nordstromrack())
 
     ### 4th website:
-    scraped_items.extend(scrappers.scrape_altomusic())  # ~ 74 - 106 sec
+    scraped_items.extend(scrappers.scrape_altomusic())
 
     ### 5th website:
-    scraped_items.extend(scrappers.scrape_muscleandstrength())  # ~ 20 sec
+    scraped_items.extend(scrappers.scrape_muscleandstrength())
 
     ### 6th website:
-    scraped_items.extend(scrappers.scrape_camerareadycosmetics())  # ~ 9 sec
+    scraped_items.extend(scrappers.scrape_camerareadycosmetics())
 
     ### 7th website:
-    scraped_items.extend(scrappers.scrape_officesupply())  # ~ 4 sec
+    scraped_items.extend(scrappers.scrape_officesupply())
 
     ### 8th website:
-    scraped_items.extend(scrappers.scrape_gamestop())  # ~ 1800 sec
+    scraped_items.extend(scrappers.scrape_gamestop())
 
     ### 9th website:
-    scraped_items.extend(scrappers.scrape_scheels())  # ~ 1800 sec
+    scraped_items.extend(scrappers.scrape_scheels())
 
     ### 10th website:
-    scraped_items.extend(scrappers.scrape_academy())  # ~ 90 sec
+    scraped_items.extend(scrappers.scrape_academy())
 
     ### 11th website:
-    scraped_items.extend(scrappers.scrape_4sgm())  # ~ 260 sec
+    scraped_items.extend(scrappers.scrape_4sgm())
 
     ### check/updated items
     new_items_count = 0
