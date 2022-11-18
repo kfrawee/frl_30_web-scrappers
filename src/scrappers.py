@@ -65,7 +65,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get number of pages
             # it is 5 pages, but I don't want to hard code it incase it increases
@@ -88,7 +88,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 # find all class="price" but skip the second one (each item has 2 "price" classes)
                 prices = [
@@ -150,7 +150,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -170,7 +170,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(
                     class_="similar-products__item col-xs-12 col-sm-6 col-md-4 slp-eq-height"
@@ -240,7 +240,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -257,7 +257,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(class_="ivm_G _PT1R")
 
@@ -329,7 +329,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -347,7 +347,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(attrs={"class": "details"})
 
@@ -410,7 +410,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -433,7 +433,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(
                     class_="cell small-12 bp600-6 bp960-4 large-3 grid-product"
@@ -495,7 +495,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -511,7 +511,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(attrs={"class": "grid-item"})
 
@@ -578,7 +578,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             # try:
@@ -594,7 +594,7 @@ class Scrapper:
                 # res = requests.request("GET", url=page_url, headers=self.headers)
                 # assert res.status_code == HTTPStatus.OK
 
-                # soup = BeautifulSoup(res.content, "lxml")
+                # soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(class_="product-details")
 
@@ -659,7 +659,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -689,7 +689,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products_raw = soup.find(class_="product-grid-wrapper")
                 products = products_raw.find_all(class_="product grid-tile")
@@ -752,7 +752,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -776,7 +776,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(class_="tile-inner")
 
@@ -839,7 +839,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -858,7 +858,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(class_="css-18cbcd1")
 
@@ -929,7 +929,7 @@ class Scrapper:
             res = requests.request("GET", url=base_url, headers=self.headers)
             assert res.status_code == HTTPStatus.OK
 
-            soup = BeautifulSoup(res.content, "lxml")
+            soup = BeautifulSoup(res.content, "hrml.parser")
 
             # get num_of_pages
             try:
@@ -951,7 +951,7 @@ class Scrapper:
                 res = requests.request("GET", url=page_url, headers=self.headers)
                 assert res.status_code == HTTPStatus.OK
 
-                soup = BeautifulSoup(res.content, "lxml")
+                soup = BeautifulSoup(res.content, "hrml.parser")
 
                 products = soup.find_all(class_="product_item_sm")
 
