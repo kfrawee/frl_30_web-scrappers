@@ -43,10 +43,9 @@ class TelegramBot:
             pattern = re.compile(r"<.*?>")
             message_ = pattern.sub("", message)
             print(message_)
-        
+
         if emoji in self.emojis.keys():
             message = f"{self.emojis.get(emoji)}  {message}"
-
 
         try:
             self.bot_client.send_message(

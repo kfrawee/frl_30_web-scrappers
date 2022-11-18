@@ -47,7 +47,7 @@ class Scrapper:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36",
         }
         self.telegram_bot = TelegramBot()
-        self.items = list()
+        # self.items = list() # free memory each call
         self.num_of_websites = 0
 
     def scrape_plaidonline(self):
@@ -65,6 +65,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -114,7 +115,7 @@ class Scrapper:
                     )
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -141,10 +142,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_enasco(self):
         """
@@ -160,6 +161,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -212,7 +214,7 @@ class Scrapper:
                         )
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -240,10 +242,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_nordstromrack(self):
         """
@@ -260,6 +262,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -311,7 +314,7 @@ class Scrapper:
                             item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -339,10 +342,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_altomusic(self):
         """
@@ -359,6 +362,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -404,7 +408,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -430,10 +434,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_muscleandstrength(self):
         """
@@ -450,6 +454,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -497,7 +502,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -525,10 +530,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_camerareadycosmetics(self):
         """
@@ -545,6 +550,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -590,7 +596,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -618,10 +624,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_officesupply(self):
         """
@@ -638,6 +644,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -681,7 +688,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -709,10 +716,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_gamestop(self):
         """
@@ -729,6 +736,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -785,7 +793,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -794,6 +802,7 @@ class Scrapper:
                             else domain_name,
                         }
                     )
+
                 time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
@@ -812,10 +821,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_scheels(self):
         """
@@ -832,6 +841,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -882,7 +892,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -891,6 +901,7 @@ class Scrapper:
                             else domain_name,
                         }
                     )
+
                 time.sleep(PAGES_SLEEP_INTERVAL)
 
         except (
@@ -909,10 +920,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_academy(self):
         """
@@ -929,6 +940,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -978,7 +990,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -1006,10 +1018,10 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
 
     def scrape_4sgm(self):
         """
@@ -1029,6 +1041,7 @@ class Scrapper:
         self.telegram_bot.send_alert(f"Scrapping: {get_domain_name(base_url)}")
         self.num_of_websites += 1
         local_now = time.time()
+        items = list()
 
         try:
             res = requests.request("GET", url=base_url, headers=self.headers)
@@ -1074,7 +1087,7 @@ class Scrapper:
                         item_price = 0.0  # no price available
 
                     # append item data to the dictionary
-                    self.items.append(
+                    items.append(
                         {
                             "item_title": item_title,
                             "item_price": item_price,
@@ -1102,7 +1115,7 @@ class Scrapper:
         # report to telegram
         self.telegram_bot.send_success(
             f"Finished scrapping {get_domain_name(base_url)} in {get_elapsed_time(start_time=local_now)} seconds."
-            f"\nCollected {len(self.items)} items.\n"
+            f"\nCollected {len(items)} items.\n"
         )
 
-        return self.items
+        return items
