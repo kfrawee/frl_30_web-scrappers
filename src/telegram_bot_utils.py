@@ -64,7 +64,6 @@ class TelegramBot:
             except Exception as e:  # -_-
                 print(f"Error sending message again, '{e.message}'.")
 
-
     def send_new_item_added(
         self, item_title: str, item_url: str, item_price: float
     ) -> None:
