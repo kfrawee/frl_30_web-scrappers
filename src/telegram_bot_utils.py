@@ -120,6 +120,7 @@ class TelegramBot:
         item_url: str,
         item_old_price: float,
         item_new_price: float,
+        send_all: bool,
     ) -> None:
         """
         Send message if item's price is updated.
@@ -129,6 +130,7 @@ class TelegramBot:
             item_url (str): url of the item.
             item_old_price (float): old price of the item.
             item_new_price (float): new price of the item.
+            send_all (bool): Either to send all updated prices (increased or decreased) or only the decreased prices.
         Returns:
             None
         """
@@ -138,6 +140,9 @@ class TelegramBot:
             emoji = "DOWN"
         else:
             emoji = "UP"
+            if not send_all:
+                return
+        
         message = (
             "<b>Hey! An item's price has been updated!</b> \n"
             f"<a href='{item_url}'>{item_title}</a> \n"

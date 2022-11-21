@@ -83,8 +83,14 @@ if __name__ == "__main__":
             if item_new_price != item_old_price:
                 updated_items_count += 1
                 update_item_price(updated_items_df, item_title, item_new_price)
+                # change send_all to `true` to get all updated items prices
+                # false for only decreased prices.
                 telegram_bot.send_price_update(
-                    item_title, item_url, item_old_price, item_new_price
+                    item_title=item_title,
+                    item_url=item_url,
+                    item_old_price=item_old_price,
+                    item_new_price=item_new_price,
+                    send_all=False,
                 )
 
         else:
