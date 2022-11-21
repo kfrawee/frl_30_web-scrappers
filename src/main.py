@@ -14,7 +14,7 @@ from helpers import (
 )
 
 from scrappers import Scrapper
-from constants import DATA_COLUMNS
+from constants import DATA_COLUMNS, SEND_ALL_UPDATES, SEND_NEW_ITEMS
 from telegram_bot_utils import TelegramBot
 
 telegram_bot = TelegramBot()
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     now = time.time()
     scraped_items = list()
 
-    telegram_bot.send_alert(f"Start scraping...")
+    # telegram_bot.send_alert(f"Start scraping...")
 
     ### SCRAPPERS
     # comment a line to enable/disable/update a certain website
@@ -42,34 +42,34 @@ if __name__ == "__main__":
     scraped_items.extend(scrappers.scrape_plaidonline())
 
     ### 2nd website:
-    scraped_items.extend(scrappers.scrape_enasco())
+    # scraped_items.extend(scrappers.scrape_enasco())
 
     ### 3rd website:
-    scraped_items.extend(scrappers.scrape_nordstromrack())
+    # scraped_items.extend(scrappers.scrape_nordstromrack())
 
     ### 4th website:
-    scraped_items.extend(scrappers.scrape_altomusic())
+    # scraped_items.extend(scrappers.scrape_altomusic())
 
     ### 5th website:
-    scraped_items.extend(scrappers.scrape_muscleandstrength())
+    # scraped_items.extend(scrappers.scrape_muscleandstrength())
 
     ### 6th website:
-    scraped_items.extend(scrappers.scrape_camerareadycosmetics())
+    # scraped_items.extend(scrappers.scrape_camerareadycosmetics())
 
     ### 7th website:
-    scraped_items.extend(scrappers.scrape_officesupply())
+    # scraped_items.extend(scrappers.scrape_officesupply())
 
     ### 8th website:
-    scraped_items.extend(scrappers.scrape_gamestop())
+    # scraped_items.extend(scrappers.scrape_gamestop())
 
     ### 9th website:
-    scraped_items.extend(scrappers.scrape_scheels())
+    # scraped_items.extend(scrappers.scrape_scheels())
 
     ### 10th website:
-    scraped_items.extend(scrappers.scrape_academy())
+    # scraped_items.extend(scrappers.scrape_academy())
 
     ### 11th website:
-    scraped_items.extend(scrappers.scrape_4sgm())
+    # scraped_items.extend(scrappers.scrape_4sgm())
 
     ### check/updated items
     new_items_count = 0
@@ -83,14 +83,14 @@ if __name__ == "__main__":
             if item_new_price != item_old_price:
                 updated_items_count += 1
                 update_item_price(updated_items_df, item_title, item_new_price)
-                # change send_all to `true` to get all updated items prices
+                # change send_all_updates to `true` to get all updated items prices
                 # false for only decreased prices.
                 telegram_bot.send_price_update(
                     item_title=item_title,
                     item_url=item_url,
                     item_old_price=item_old_price,
                     item_new_price=item_new_price,
-                    send_all=False,
+                    send_all_updates=SEND_ALL_UPDATES,
                 )
 
         else:
@@ -99,6 +99,14 @@ if __name__ == "__main__":
             updated_items_df = pd.concat(
                 [updated_items_df, pd.DataFrame([item_data], columns=DATA_COLUMNS),]
             )
+            # report to telegram
+            if SEND_NEW_ITEMS:
+                item_data.get("item_title")
+                item_url = item_data.get("item_url")
+                item_price = item_data.get("item_price")
+                telegram_bot.send_new_item_added(
+                    item_title=item_title, item_url=item_url, item_price=item_price,
+                )
 
     ### Save data
     save_data(updated_items_df)
