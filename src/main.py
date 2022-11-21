@@ -42,34 +42,34 @@ if __name__ == "__main__":
     scraped_items.extend(scrappers.scrape_plaidonline())
 
     ### 2nd website:
-    # scraped_items.extend(scrappers.scrape_enasco())
+    scraped_items.extend(scrappers.scrape_enasco())
 
     ### 3rd website:
-    # scraped_items.extend(scrappers.scrape_nordstromrack())
+    scraped_items.extend(scrappers.scrape_nordstromrack())
 
     ### 4th website:
-    # scraped_items.extend(scrappers.scrape_altomusic())
+    scraped_items.extend(scrappers.scrape_altomusic())
 
     ### 5th website:
-    # scraped_items.extend(scrappers.scrape_muscleandstrength())
+    scraped_items.extend(scrappers.scrape_muscleandstrength())
 
     ### 6th website:
-    # scraped_items.extend(scrappers.scrape_camerareadycosmetics())
+    scraped_items.extend(scrappers.scrape_camerareadycosmetics())
 
     ### 7th website:
-    # scraped_items.extend(scrappers.scrape_officesupply())
+    scraped_items.extend(scrappers.scrape_officesupply())
 
     ### 8th website:
-    # scraped_items.extend(scrappers.scrape_gamestop())
+    scraped_items.extend(scrappers.scrape_gamestop())
 
     ### 9th website:
-    # scraped_items.extend(scrappers.scrape_scheels())
+    scraped_items.extend(scrappers.scrape_scheels())
 
     ### 10th website:
-    # scraped_items.extend(scrappers.scrape_academy())
+    scraped_items.extend(scrappers.scrape_academy())
 
     ### 11th website:
-    # scraped_items.extend(scrappers.scrape_4sgm())
+    scraped_items.extend(scrappers.scrape_4sgm())
 
     ### check/updated items
     new_items_count = 0
