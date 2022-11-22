@@ -927,13 +927,13 @@ class Scrapper:
 
     def scrape_academy(self):
         """
-            Scrapper for: "https://www.academy.com/"
+        Scrapper for: "https://www.academy.com/"
 
-            Args:
-                _
-            Return:
-                items (list): list of scrapped items.
-            """
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
         domain_name = "https://www.academy.com/"
         base_url = "https://www.academy.com/c/shops/sale"
 
@@ -1025,13 +1025,13 @@ class Scrapper:
 
     def scrape_4sgm(self):
         """
-            Scrapper for: "https://www.4sgm.com/"
+        Scrapper for: "https://www.4sgm.com/"
 
-            Args:
-                _
-            Return:
-                items (list): list of scrapped items.
-            """
+        Args:
+            _
+        Return:
+            items (list): list of scrapped items.
+        """
         domain_name = "https://www.4sgm.com/"
         base_url = (
             "https://www.4sgm.com/category/536/Top-Deals.html"
