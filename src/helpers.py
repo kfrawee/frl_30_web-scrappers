@@ -133,7 +133,7 @@ def extract_price(text_price: str = None, thousands_comma_separator=False) -> fl
     pattern = r"(\d+(?:\.\d+)?)"
     extracted_price = re.findall(pattern, text_price.replace(",", "."))
 
-    return float(extracted_price[0]) if extracted_price else 0
+    return float(extracted_price[0]) if extracted_price else float(0)
 
 
 def get_domain_name(url: str = None) -> str:
