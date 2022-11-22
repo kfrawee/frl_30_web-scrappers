@@ -5,7 +5,6 @@ Telegram bot Class and helpers methods.
 from telegram import Bot, ParseMode
 from telegram.error import RetryAfter, TimedOut
 
-# from helpers import remove_html_tags
 from constants import TELEGRAM_BOT_API_KEY, CHAT_ID
 
 
