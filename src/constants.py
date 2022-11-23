@@ -17,8 +17,8 @@ SEND_ALL_UPDATES: Send notifications for both, decreased and increased prices. `
 SEND_NEW_ITEMS: Either to send notifications for newly added items or not.
 """
 
-TELEGRAM_BOT_API_KEY = "5280766845:AAEnPZxjpBne5Dxl6x-U121VGvMDuOR4H4g"
-CHAT_ID = -845543341
+TELEGRAM_BOT_API_KEY = "YOUR_TOKEN"
+CHAT_ID = 12345678
 DATA_DIR = "data"
 DATA_FILE_NAME = "data.csv"
 DATA_COLUMNS = ["item_title", "item_price", "item_url", "added_on", "updated_on"]
